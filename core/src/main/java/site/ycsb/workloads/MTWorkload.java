@@ -78,7 +78,8 @@ public class MTWorkload extends CoreWorkload {
 
   @Override
   protected String getDbKey(long keynum) {
-    return CoreWorkload.getKeyNumValue(keynum, orderedinserts);
+    //return CoreWorkload.getKeyNumValue(keynum, orderedinserts);
+    return null;
   }
 
   private ByteIterator getTenantIdForKey(String key){
