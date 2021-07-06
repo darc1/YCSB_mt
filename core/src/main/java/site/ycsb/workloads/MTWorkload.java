@@ -21,6 +21,7 @@ import site.ycsb.ByteIterator;
 import site.ycsb.StringByteIterator;
 import site.ycsb.WorkloadException;
 import site.ycsb.generator.UniformLongGenerator;
+import site.ycsb.Client;
 
 import java.util.*;
 
@@ -35,6 +36,7 @@ public class MTWorkload extends CoreWorkload {
   public static final String MISS_RATIO_PERCENT_PROPERTY = "num_tenants";
   private int numTenants;
   private List<ByteIterator> tenantIds;
+  private int seed = 90901;
 
   public MTWorkload() {
     super();
@@ -44,12 +46,9 @@ public class MTWorkload extends CoreWorkload {
   public void init(Properties p) throws WorkloadException {
     super.init(p);
     this.fieldnames.add(TENANT_ID_FIELD);
-    numTenants = Integer.parseInt(p.getProperty(NUM_TENANTS_PROPERTY, NUM_TENANTS_DEFAULT));
-    tenantIds = new ArrayList<>(numTenants);
-    for (int i = 0; i < numTenants; i++) {
-      String uuid = UUID.randomUUID().toString();
-      tenantIds.add(new StringByteIterator(uuid));
-    }
+
+    boolean loadPhase = !Boolean.parseBoolean(p.getProperty(Client.DO_TRANSACTIONS_PROPERTY));
+    
     long insertstart = Long.parseLong(p.getProperty(INSERT_START_PROPERTY, INSERT_START_PROPERTY_DEFAULT));
     long insertcount = Integer
         .parseInt(p.getProperty(INSERT_COUNT_PROPERTY, String.valueOf(recordcount - insertstart)));
@@ -63,7 +62,22 @@ public class MTWorkload extends CoreWorkload {
     // TODO create users!!! for each tenant!!
   }
 
-  private void createUsers(){
+  public void initTenants(Properties p){
+
+    numTenants = Integer.parseInt(p.getProperty(NUM_TENANTS_PROPERTY, NUM_TENANTS_DEFAULT));
+    tenantIds = new ArrayList<>(numTenants);
+    Random tenantRandom = new Random(seed);
+    for (int i = 0; i < numTenants; i++) {
+      byte[] name = new byte[8];
+      tenantRandom.nextBytes(name);
+      String uuid = UUID.nameUUIDFromBytes(name).toString();
+      tenantIds.add(new StringByteIterator(uuid));
+    }
+    
+
+  }
+
+  private void createUsers() {
   }
 
   /**
@@ -78,11 +92,10 @@ public class MTWorkload extends CoreWorkload {
 
   @Override
   protected String getDbKey(long keynum) {
-    //return CoreWorkload.getKeyNumValue(keynum, orderedinserts);
-    return null;
+    return getKeyNumValue(keynum);
   }
 
-  private ByteIterator getTenantIdForKey(String key){
+  private ByteIterator getTenantIdForKey(String key) {
     int index = Math.abs(hashCode()) % tenantIds.size();
     return tenantIds.get(index);
   }

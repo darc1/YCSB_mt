@@ -514,11 +514,17 @@ public class CoreWorkload extends Workload {
         INSERTION_RETRY_INTERVAL, INSERTION_RETRY_INTERVAL_DEFAULT));
   }
 
-  protected String buildKeyName(long keynum) {
+  
+  protected String getKeyNumValue(long keynum){
     if (!orderedinserts) {
       keynum = Utils.hash(keynum);
     }
     String value = Long.toString(keynum);
+    return value;
+  }
+
+  protected String buildKeyName(long keynum) {
+    String value = getKeyNumValue(keynum);
     int fill = zeropadding - value.length();
     String prekey = "user";
     for (int i = 0; i < fill; i++) {

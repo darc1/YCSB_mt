@@ -41,7 +41,7 @@ LICENSE file.
     </dependency>
     <dependency>
       <groupId>site.ycsb</groupId>
-      <artifactId>jdbc-binding</artifactId>
+      <artifactId>jdbcmt-binding</artifactId>
       <version>${project.version}</version>
     </dependency>
     <!--   <dependency>
