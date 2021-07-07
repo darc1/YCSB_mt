@@ -67,6 +67,7 @@ public final class TenantManager {
     }
 
     invalidTenantId = generateUuid(tenantRandom);
+    System.out.println("Created invalid tenant ID: " + invalidTenantId);
     invalidTenantIdBytes = new StringByteIterator(invalidTenantId);
 
   }

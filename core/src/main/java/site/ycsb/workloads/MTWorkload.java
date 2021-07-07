@@ -57,12 +57,12 @@ public class MTWorkload extends CoreWorkload {
     double missRatioPercent = Double.valueOf(p.getProperty(MISS_RATIO_PROPERTY, MISS_RATIO_DEFAULT));
     maxVal = (insertstart + insertcount - 1);
     adjustedMaxVal = (long) (maxVal + maxVal * (missRatioPercent));
-    System.out.format("adjusted max val to: %d from: %d miss ration is %d percent\n", adjustedMaxVal, maxVal,
+    System.out.format("adjusted max val to: %d from: %d miss ration is %f percent\n", adjustedMaxVal, maxVal,
         missRatioPercent);
     keychooser = new UniformLongGenerator(insertstart, adjustedMaxVal);
     double unauthRatioPercent = Double.valueOf(p.getProperty(UNAUTH_RATIO_PROPERTY, UNAUTH_RATIO_DEFAULT));
     unauthCount = Math.round(adjustedMaxVal * unauthRatioPercent);
-    System.out.println("unauthorized records count: " + unauthCount);
+    System.out.println("unauthorized records count: " + unauthCount + " unauthorized precent: " + unauthRatioPercent);
 
   }
 
@@ -73,7 +73,7 @@ public class MTWorkload extends CoreWorkload {
     HashMap<String, ByteIterator> values = super.buildValues(key);
     ByteIterator tenantIdValue = tenantManager.getTenantIdForKey(key);
     if (unauthCount > 0 && keynum > maxVal - unauthCount) {
-      System.out.println();
+      System.out.println("Created record for invalid tenant.");
       tenantIdValue = tenantManager.getInvalidTenant();
     }
     values.put(TENANT_ID_FIELD, tenantIdValue);
