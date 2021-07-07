@@ -12,10 +12,9 @@ CREATE TABLE usertable (
 	tenant_id VARCHAR(36)
 );
 
-
 CREATE TABLE acls (
-	serial PRIMARY KEY,
-	user_name VAR_CHAR(50),
+	pkey serial PRIMARY KEY,
+	user_name VARCHAR(50),
 	tenant_id VARCHAR(36),
 	CONSTRAINT user_name_unique UNIQUE (user_name)
 );

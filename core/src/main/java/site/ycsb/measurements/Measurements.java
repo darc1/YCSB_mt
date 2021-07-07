@@ -32,12 +32,7 @@ public class Measurements {
    * All supported measurement types are defined in this enum.
    */
   public enum MeasurementType {
-    HISTOGRAM,
-    HDRHISTOGRAM,
-    HDRHISTOGRAM_AND_HISTOGRAM,
-    HDRHISTOGRAM_AND_RAW,
-    TIMESERIES,
-    RAW
+    HISTOGRAM, HDRHISTOGRAM, HDRHISTOGRAM_AND_HISTOGRAM, HDRHISTOGRAM_AND_RAW, TIMESERIES, RAW
   }
 
   public static final String MEASUREMENT_TYPE_PROPERTY = "measurementtype";
@@ -48,6 +43,10 @@ public class Measurements {
 
   public static final String MEASUREMENT_TRACK_JVM_PROPERTY = "measurement.trackjvm";
   public static final String MEASUREMENT_TRACK_JVM_PROPERTY_DEFAULT = "false";
+
+  public static final String MEASURE_READ_MISS = "read_miss";
+  public static final String MEASURE_READ_UNAUTH = "read_unauthorized";
+  public static final String MEASURE_READ_VALID = "read_valid";
 
   private static Measurements singleton = null;
   private static Properties measurementproperties = null;
@@ -119,6 +118,11 @@ public class Measurements {
     default:
       throw new IllegalArgumentException("unknown " + MEASUREMENT_INTERVAL + "=" + mIntervalString);
     }
+
+    opToMesurementMap.put(MEASURE_READ_MISS, new OneMeasurementCounter(MEASURE_READ_MISS));
+    opToMesurementMap.put("read_unauthorized", new OneMeasurementCounter(MEASURE_READ_UNAUTH));
+    opToMesurementMap.put("read_valid", new OneMeasurementCounter(MEASURE_READ_VALID));
+
   }
 
   private OneMeasurement constructOneMeasurement(String name) {
@@ -128,12 +132,10 @@ public class Measurements {
     case HDRHISTOGRAM:
       return new OneMeasurementHdrHistogram(name, props);
     case HDRHISTOGRAM_AND_HISTOGRAM:
-      return new TwoInOneMeasurement(name,
-          new OneMeasurementHdrHistogram("Hdr" + name, props),
+      return new TwoInOneMeasurement(name, new OneMeasurementHdrHistogram("Hdr" + name, props),
           new OneMeasurementHistogram("Bucket" + name, props));
     case HDRHISTOGRAM_AND_RAW:
-      return new TwoInOneMeasurement(name,
-          new OneMeasurementHdrHistogram("Hdr" + name, props),
+      return new TwoInOneMeasurement(name, new OneMeasurementHdrHistogram("Hdr" + name, props),
           new OneMeasurementRaw("Raw" + name, props));
     case TIMESERIES:
       return new OneMeasurementTimeSeries(name, props);
@@ -177,8 +179,8 @@ public class Measurements {
   }
 
   /**
-   * Report a single value of a single metric. E.g. for read latency, operation="READ" and latency is the measured
-   * value.
+   * Report a single value of a single metric. E.g. for read latency,
+   * operation="READ" and latency is the measured value.
    */
   public void measure(String operation, int latency) {
     if (measurementInterval == 1) {
@@ -188,7 +190,8 @@ public class Measurements {
       OneMeasurement m = getOpMeasurement(operation);
       m.measure(latency);
     } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-      // This seems like a terribly hacky way to cover up for a bug in the measurement code
+      // This seems like a terribly hacky way to cover up for a bug in the measurement
+      // code
       System.out.println("ERROR: java.lang.ArrayIndexOutOfBoundsException - ignoring and continuing");
       e.printStackTrace();
       e.printStackTrace(System.out);
@@ -196,8 +199,8 @@ public class Measurements {
   }
 
   /**
-   * Report a single value of a single metric. E.g. for read latency, operation="READ" and latency is the measured
-   * value.
+   * Report a single value of a single metric. E.g. for read latency,
+   * operation="READ" and latency is the measured value.
    */
   public void measureIntended(String operation, int latency) {
     if (measurementInterval == 0) {
@@ -207,7 +210,8 @@ public class Measurements {
       OneMeasurement m = getOpIntendedMeasurement(operation);
       m.measure(latency);
     } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-      // This seems like a terribly hacky way to cover up for a bug in the measurement code
+      // This seems like a terribly hacky way to cover up for a bug in the measurement
+      // code
       System.out.println("ERROR: java.lang.ArrayIndexOutOfBoundsException - ignoring and continuing");
       e.printStackTrace();
       e.printStackTrace(System.out);
@@ -243,9 +247,7 @@ public class Measurements {
    * Report a return code for a single DB operation.
    */
   public void reportStatus(final String operation, final Status status) {
-    OneMeasurement m = measurementInterval == 1 ?
-        getOpIntendedMeasurement(operation) :
-        getOpMeasurement(operation);
+    OneMeasurement m = measurementInterval == 1 ? getOpIntendedMeasurement(operation) : getOpMeasurement(operation);
     m.reportStatus(status);
   }
 

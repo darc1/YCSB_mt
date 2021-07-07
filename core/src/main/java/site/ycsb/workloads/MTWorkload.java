@@ -18,10 +18,11 @@
 package site.ycsb.workloads;
 
 import site.ycsb.ByteIterator;
-import site.ycsb.StringByteIterator;
+import site.ycsb.DB;
 import site.ycsb.WorkloadException;
 import site.ycsb.generator.UniformLongGenerator;
-import site.ycsb.Client;
+import site.ycsb.measurements.Measurements;
+import site.ycsb.mt.TenantManager;
 
 import java.util.*;
 
@@ -30,13 +31,14 @@ import java.util.*;
  */
 public class MTWorkload extends CoreWorkload {
   public static final String TENANT_ID_FIELD = "tenant_id";
-  public static final String NUM_TENANTS_DEFAULT = "10";
-  public static final String NUM_TENANTS_PROPERTY = "num_tenants";
-  public static final String MISS_RATIO_PERCENT_DEFAULT = "1";
-  public static final String MISS_RATIO_PERCENT_PROPERTY = "num_tenants";
-  private int numTenants;
-  private List<ByteIterator> tenantIds;
-  private int seed = 90901;
+  public static final String MISS_RATIO_DEFAULT = "0.01";
+  public static final String MISS_RATIO_PROPERTY = "miss_ratio";
+  public static final String UNAUTH_RATIO_DEFAULT = "0.01";
+  public static final String UNAUTH_RATIO_PROPERTY = "unauth_ratio";
+  private TenantManager tenantManager;
+  private long maxVal;
+  private long adjustedMaxVal;
+  private long unauthCount;
 
   public MTWorkload() {
     super();
@@ -46,47 +48,35 @@ public class MTWorkload extends CoreWorkload {
   public void init(Properties p) throws WorkloadException {
     super.init(p);
     this.fieldnames.add(TENANT_ID_FIELD);
+    this.tenantManager = TenantManager.getInstance();
+    this.tenantManager.init(p);
 
-    boolean loadPhase = !Boolean.parseBoolean(p.getProperty(Client.DO_TRANSACTIONS_PROPERTY));
-    
     long insertstart = Long.parseLong(p.getProperty(INSERT_START_PROPERTY, INSERT_START_PROPERTY_DEFAULT));
     long insertcount = Integer
         .parseInt(p.getProperty(INSERT_COUNT_PROPERTY, String.valueOf(recordcount - insertstart)));
-    int missRatioPercent = Integer.valueOf(p.getProperty(MISS_RATIO_PERCENT_PROPERTY, MISS_RATIO_PERCENT_DEFAULT));
-    long maxVal = (insertstart + insertcount - 1);
-    long adjustedMaxVal = (long) (maxVal + maxVal * (missRatioPercent / 100.0));
+    double missRatioPercent = Double.valueOf(p.getProperty(MISS_RATIO_PROPERTY, MISS_RATIO_DEFAULT));
+    maxVal = (insertstart + insertcount - 1);
+    adjustedMaxVal = (long) (maxVal + maxVal * (missRatioPercent));
     System.out.format("adjusted max val to: %d from: %d miss ration is %d percent\n", adjustedMaxVal, maxVal,
         missRatioPercent);
     keychooser = new UniformLongGenerator(insertstart, adjustedMaxVal);
+    double unauthRatioPercent = Double.valueOf(p.getProperty(UNAUTH_RATIO_PROPERTY, UNAUTH_RATIO_DEFAULT));
+    unauthCount = Math.round(adjustedMaxVal * unauthRatioPercent);
+    System.out.println("unauthorized records count: " + unauthCount);
 
-    // TODO create users!!! for each tenant!!
-  }
-
-  public void initTenants(Properties p){
-
-    numTenants = Integer.parseInt(p.getProperty(NUM_TENANTS_PROPERTY, NUM_TENANTS_DEFAULT));
-    tenantIds = new ArrayList<>(numTenants);
-    Random tenantRandom = new Random(seed);
-    for (int i = 0; i < numTenants; i++) {
-      byte[] name = new byte[8];
-      tenantRandom.nextBytes(name);
-      String uuid = UUID.nameUUIDFromBytes(name).toString();
-      tenantIds.add(new StringByteIterator(uuid));
-    }
-    
-
-  }
-
-  private void createUsers() {
   }
 
   /**
    * Builds values for all fields.
    */
-  @Override
-  protected HashMap<String, ByteIterator> buildValues(String key) {
+  protected HashMap<String, ByteIterator> buildValuesWithTenant(String key, int keynum) {
     HashMap<String, ByteIterator> values = super.buildValues(key);
-    values.put(TENANT_ID_FIELD, getTenantIdForKey(key));
+    ByteIterator tenantIdValue = tenantManager.getTenantIdForKey(key);
+    if (unauthCount > 0 && keynum > maxVal - unauthCount) {
+      System.out.println();
+      tenantIdValue = tenantManager.getInvalidTenant();
+    }
+    values.put(TENANT_ID_FIELD, tenantIdValue);
     return values;
   }
 
@@ -95,8 +85,47 @@ public class MTWorkload extends CoreWorkload {
     return getKeyNumValue(keynum);
   }
 
-  private ByteIterator getTenantIdForKey(String key) {
-    int index = Math.abs(hashCode()) % tenantIds.size();
-    return tenantIds.get(index);
+  @Override
+  public boolean doInsert(DB db, Object threadstate) {
+    int keynum = keysequence.nextValue().intValue();
+    String dbkey = getDbKey(keynum);
+    HashMap<String, ByteIterator> values = buildValuesWithTenant(dbkey, keynum);
+
+    return super.doInsertInternal(db, dbkey, values);
+  }
+
+  @Override
+  public boolean doTransaction(DB db, Object threadstate) {
+
+    long keynum = nextKeynum();
+    if (keynum > maxVal) {
+      System.out.println("Got a miss query");
+      measurements.measure(Measurements.MEASURE_READ_MISS, 1);
+    } else {
+      measurements.measure(Measurements.MEASURE_READ_VALID, 1);
+    }
+
+    String keyname = getDbKey(keynum);
+
+    HashSet<String> fields = null;
+
+    if (!readallfields) {
+      // read a random field
+      String fieldname = fieldnames.get(fieldchooser.nextValue().intValue());
+
+      fields = new HashSet<String>();
+      fields.add(fieldname);
+    } else if (dataintegrity) {
+      // pass the full field list if dataintegrity is on for verification
+      fields = new HashSet<String>(fieldnames);
+    }
+
+    HashMap<String, ByteIterator> cells = new HashMap<String, ByteIterator>();
+    db.read(table, keyname, fields, cells);
+
+    if (dataintegrity) {
+      verifyRow(keyname, cells);
+    }
+    return true;
   }
 }

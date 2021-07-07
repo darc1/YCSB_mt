@@ -21,6 +21,7 @@ import site.ycsb.DBException;
 import site.ycsb.ByteIterator;
 import site.ycsb.Status;
 import site.ycsb.StringByteIterator;
+import site.ycsb.mt.TenantManager;
 
 import java.sql.*;
 import java.util.*;
@@ -82,6 +83,29 @@ public class JdbcMtDBClient extends DB {
   /** The field name prefix in the table. */
   public static final String COLUMN_PREFIX = "FIELD";
 
+  /**
+   * The name of the database table to run queries against.
+   */
+  public static final String TABLENAME_PROPERTY = "table";
+
+  /**
+   * The default name of the database table to run queries against.
+   */
+  public static final String TABLENAME_PROPERTY_DEFAULT = "usertable";
+
+  /**
+   * The name of the database table to run queries against.
+   */
+  public static final String ACLS_TABLENAME_PROPERTY = "acls_table";
+
+  /**
+   * The default name of the database table to run queries against.
+   */
+  public static final String ACLS_TABLENAME_PROPERTY_DEFAULT = "acls";
+  public static final String DO_TRANSACTIONS_PROPERTY = "dotransactions";
+  private String aclsTable;
+
+  protected String table;
   private boolean sqlserver = false;
   private List<Connection> conns;
   private boolean initialized = false;
@@ -93,9 +117,12 @@ public class JdbcMtDBClient extends DB {
   private static final String DEFAULT_PROP = "";
   private ConcurrentMap<StatementType, PreparedStatement> cachedStatements;
   private long numRowsInBatch = 0;
-  /** DB flavor defines DB-specific syntax and behavior for the
-   * particular database. Current database flavors are: {default, phoenix} */
+  /**
+   * DB flavor defines DB-specific syntax and behavior for the particular
+   * database. Current database flavors are: {default, phoenix}
+   */
   private DBFlavor dbFlavor;
+  private TenantManager tenantManager;
 
   /**
    * Ordered field information for insert and update statements.
@@ -149,7 +176,9 @@ public class JdbcMtDBClient extends DB {
     }
   }
 
-  /** Returns parsed int value from the properties if set, otherwise returns -1. */
+  /**
+   * Returns parsed int value from the properties if set, otherwise returns -1.
+   */
   private static int getIntProperty(Properties props, String key) throws DBException {
     String valueStr = props.getProperty(key);
     if (valueStr != null) {
@@ -163,7 +192,10 @@ public class JdbcMtDBClient extends DB {
     return -1;
   }
 
-  /** Returns parsed boolean value from the properties if set, otherwise returns defaultVal. */
+  /**
+   * Returns parsed boolean value from the properties if set, otherwise returns
+   * defaultVal.
+   */
   private static boolean getBoolProperty(Properties props, String key, boolean defaultVal) {
     String valueStr = props.getProperty(key);
     if (valueStr != null) {
@@ -175,20 +207,126 @@ public class JdbcMtDBClient extends DB {
   @Override
   public void init() throws DBException {
 
-    System.out.println("Running Multi Tenant DB");
-    if (initialized) {
-      System.err.println("Client connection already initialized.");
-      return;
-    }
     props = getProperties();
-    String urls = props.getProperty(CONNECTION_URL, DEFAULT_PROP);
-    String user = props.getProperty(CONNECTION_USER, DEFAULT_PROP);
-    String passwd = props.getProperty(CONNECTION_PASSWD, DEFAULT_PROP);
-    String driver = props.getProperty(DRIVER_CLASS);
+    table = props.getProperty(TABLENAME_PROPERTY, TABLENAME_PROPERTY_DEFAULT);
+    aclsTable = props.getProperty(ACLS_TABLENAME_PROPERTY, ACLS_TABLENAME_PROPERTY_DEFAULT);
+    System.out.println("Running Multi Tenant DB");
+    boolean loadTenants = getBoolProperty(props, TenantManager.MULTI_TENANT_INIT, false);
+    tenantManager = TenantManager.getInstance();
+    tenantManager.init(props);
 
-    if (driver.contains("sqlserver")) {
-      sqlserver = true;
+    if (loadTenants) {
+      System.out.println("loading tenants");
+      initConnection();
+      createTenantsAndUsers();
+
+    } else {
+
+      boolean dotransactions = Boolean.valueOf(props.getProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(true)));
+      if (!dotransactions) {
+        initConnection();
+      } else {
+        initConnection();
+      }
     }
+  }
+
+  private void createTenantsAndUsers() throws DBException {
+
+    for (String tenantId : tenantManager.getTenantIds()) {
+      for (String username : tenantManager.getTenantUsers(tenantId)) {
+        Status res = insertUser(aclsTable, username, tenantId);
+        if (res != Status.OK) {
+          System.err.println("failed to insert user: " + username + " tenantId: " + tenantId + "Status: " + res);
+          System.exit(1);
+        }
+        res = createRole(username, aclsTable, table);
+        if (res != Status.OK) {
+          System.err.println("failed to create role: " + username + " tenantId: " + tenantId + "Status: " + res);
+          System.exit(1);
+        }
+      }
+    }
+  }
+
+  public Status insertUser(String tableName, String username, String tenantId) {
+    try {
+      StringBuilder insert = new StringBuilder("INSERT INTO ");
+      insert.append(tableName);
+      insert.append(" (user_name, tenant_id)");
+      insert.append(" VALUES(?,?)");
+      // TODO shared support?
+      PreparedStatement insertStatement = conns.get(0).prepareStatement(insert.toString());
+      insertStatement.setString(1, username);
+      insertStatement.setString(2, tenantId);
+
+      // Normal update
+      int result = insertStatement.executeUpdate();
+      // If we are not autoCommit, we might have to commit now
+      if (!autoCommit) {
+        // Let updates be batcher locally
+        if (batchSize > 0) {
+          if (++numRowsInBatch % batchSize == 0) {
+            // Send the batch of updates
+            conns.get(0).commit();
+          }
+          // uhh
+          return Status.OK;
+        } else {
+          // Commit each update
+          conns.get(0).commit();
+        }
+      }
+      if (result == 1) {
+        return Status.OK;
+      }
+      return Status.UNEXPECTED_STATE;
+    } catch (SQLException e) {
+      System.err.println("Error in processing insert to table: " + tableName + e);
+      return Status.ERROR;
+    }
+  }
+
+  public Status createRole(String username, String aclTable, String userTable) {
+    try {
+      StringBuilder createRole = new StringBuilder("CREATE ROLE " + username + " WITH LOGIN PASSWORD '123456';");
+      createRole.append("\n");
+      createRole.append("GRANT SELECT ON " + userTable + " TO " + username + ";");
+      createRole.append("\n");
+      createRole.append("GRANT SELECT ON " + aclTable + " TO " + username + ";");
+
+      // TODO shared support?
+      PreparedStatement roleStatement = conns.get(0).prepareStatement(createRole.toString());
+
+      // Normal update
+      boolean result = roleStatement.execute();
+      // If we are not autoCommit, we might have to commit now
+      if (!autoCommit) {
+        // Let updates be batcher locally
+        if (batchSize > 0) {
+          if (++numRowsInBatch % batchSize == 0) {
+            // Send the batch of updates
+            conns.get(0).commit();
+          }
+          // uhh
+          return Status.OK;
+        } else {
+          // Commit each update
+          conns.get(0).commit();
+        }
+      }
+      System.out.println("result of create role: " + result);
+      if (!result) {
+        return Status.OK;
+      }
+      return Status.UNEXPECTED_STATE;
+    } catch (SQLException e) {
+      System.err.println("Error in processing role create: " + username + e);
+      return Status.ERROR;
+    }
+  }
+
+  private void createConnection(String urls, String user, String passwd, String driver) throws DBException{
 
     this.jdbcFetchSize = getIntProperty(props, JDBC_FETCH_SIZE);
     this.batchSize = getIntProperty(props, DB_BATCH_SIZE);
@@ -235,7 +373,24 @@ public class JdbcMtDBClient extends DB {
       System.err.println("Invalid value for fieldcount property. " + e);
       throw new DBException(e);
     }
+  }
+  private void initConnection() throws DBException {
 
+    if (initialized) {
+      System.err.println("Client connection already initialized.");
+      return;
+    }
+    // props = getProperties();
+    String urls = props.getProperty(CONNECTION_URL, DEFAULT_PROP);
+    String user = props.getProperty(CONNECTION_USER, DEFAULT_PROP);
+    String passwd = props.getProperty(CONNECTION_PASSWD, DEFAULT_PROP);
+    String driver = props.getProperty(DRIVER_CLASS);
+
+    if (driver.contains("sqlserver")) {
+      sqlserver = true;
+    }
+
+    createConnection(urls, user, passwd, driver);
     initialized = true;
   }
 
@@ -263,8 +418,7 @@ public class JdbcMtDBClient extends DB {
     }
   }
 
-  private PreparedStatement createAndCacheInsertStatement(StatementType insertType, String key)
-      throws SQLException {
+  private PreparedStatement createAndCacheInsertStatement(StatementType insertType, String key) throws SQLException {
     String insert = dbFlavor.createInsertStatement(insertType, key);
     PreparedStatement insertStatement = getShardConnectionByKey(key).prepareStatement(insert);
     PreparedStatement stmt = cachedStatements.putIfAbsent(insertType, insertStatement);
@@ -274,8 +428,7 @@ public class JdbcMtDBClient extends DB {
     return stmt;
   }
 
-  private PreparedStatement createAndCacheReadStatement(StatementType readType, String key)
-      throws SQLException {
+  private PreparedStatement createAndCacheReadStatement(StatementType readType, String key) throws SQLException {
     String read = dbFlavor.createReadStatement(readType, key);
     PreparedStatement readStatement = getShardConnectionByKey(key).prepareStatement(read);
     PreparedStatement stmt = cachedStatements.putIfAbsent(readType, readStatement);
@@ -285,8 +438,7 @@ public class JdbcMtDBClient extends DB {
     return stmt;
   }
 
-  private PreparedStatement createAndCacheDeleteStatement(StatementType deleteType, String key)
-      throws SQLException {
+  private PreparedStatement createAndCacheDeleteStatement(StatementType deleteType, String key) throws SQLException {
     String delete = dbFlavor.createDeleteStatement(deleteType, key);
     PreparedStatement deleteStatement = getShardConnectionByKey(key).prepareStatement(delete);
     PreparedStatement stmt = cachedStatements.putIfAbsent(deleteType, deleteStatement);
@@ -296,8 +448,7 @@ public class JdbcMtDBClient extends DB {
     return stmt;
   }
 
-  private PreparedStatement createAndCacheUpdateStatement(StatementType updateType, String key)
-      throws SQLException {
+  private PreparedStatement createAndCacheUpdateStatement(StatementType updateType, String key) throws SQLException {
     String update = dbFlavor.createUpdateStatement(updateType, key);
     PreparedStatement insertStatement = getShardConnectionByKey(key).prepareStatement(update);
     PreparedStatement stmt = cachedStatements.putIfAbsent(updateType, insertStatement);
@@ -307,8 +458,7 @@ public class JdbcMtDBClient extends DB {
     return stmt;
   }
 
-  private PreparedStatement createAndCacheScanStatement(StatementType scanType, String key)
-      throws SQLException {
+  private PreparedStatement createAndCacheScanStatement(StatementType scanType, String key) throws SQLException {
     String select = dbFlavor.createScanStatement(scanType, key, sqlserver);
     PreparedStatement scanStatement = getShardConnectionByKey(key).prepareStatement(select);
     if (this.jdbcFetchSize > 0) {
@@ -351,7 +501,7 @@ public class JdbcMtDBClient extends DB {
 
   @Override
   public Status scan(String tableName, String startKey, int recordcount, Set<String> fields,
-                     Vector<HashMap<String, ByteIterator>> result) {
+      Vector<HashMap<String, ByteIterator>> result) {
     try {
       StatementType type = new StatementType(StatementType.Type.SCAN, tableName, 1, "", getShardIndexByKey(startKey));
       PreparedStatement scanStatement = cachedStatements.get(type);
@@ -389,14 +539,14 @@ public class JdbcMtDBClient extends DB {
     try {
       int numFields = values.size();
       OrderedFieldInfo fieldInfo = getFieldInfo(values);
-      StatementType type = new StatementType(StatementType.Type.UPDATE, tableName,
-          numFields, fieldInfo.getFieldKeys(), getShardIndexByKey(key));
+      StatementType type = new StatementType(StatementType.Type.UPDATE, tableName, numFields, fieldInfo.getFieldKeys(),
+          getShardIndexByKey(key));
       PreparedStatement updateStatement = cachedStatements.get(type);
       if (updateStatement == null) {
         updateStatement = createAndCacheUpdateStatement(type, key);
       }
       int index = 1;
-      for (String value: fieldInfo.getFieldValues()) {
+      for (String value : fieldInfo.getFieldValues()) {
         updateStatement.setString(index++, value);
       }
       updateStatement.setString(index, key);
@@ -416,15 +566,15 @@ public class JdbcMtDBClient extends DB {
     try {
       int numFields = values.size();
       OrderedFieldInfo fieldInfo = getFieldInfo(values);
-      StatementType type = new StatementType(StatementType.Type.INSERT, tableName,
-          numFields, fieldInfo.getFieldKeys(), getShardIndexByKey(key));
+      StatementType type = new StatementType(StatementType.Type.INSERT, tableName, numFields, fieldInfo.getFieldKeys(),
+          getShardIndexByKey(key));
       PreparedStatement insertStatement = cachedStatements.get(type);
       if (insertStatement == null) {
         insertStatement = createAndCacheInsertStatement(type, key);
       }
       insertStatement.setString(1, key);
       int index = 2;
-      for (String value: fieldInfo.getFieldValues()) {
+      for (String value : fieldInfo.getFieldValues()) {
         insertStatement.setString(index++, value);
       }
       // Using the batch insert API
@@ -436,8 +586,9 @@ public class JdbcMtDBClient extends DB {
           if (++numRowsInBatch % batchSize == 0) {
             int[] results = insertStatement.executeBatch();
             for (int r : results) {
-              // Acceptable values are 1 and SUCCESS_NO_INFO (-2) from reWriteBatchedInserts=true
-              if (r != 1 && r != -2) { 
+              // Acceptable values are 1 and SUCCESS_NO_INFO (-2) from
+              // reWriteBatchedInserts=true
+              if (r != 1 && r != -2) {
                 return Status.ERROR;
               }
             }
@@ -446,7 +597,8 @@ public class JdbcMtDBClient extends DB {
               getShardConnectionByKey(key).commit();
             }
             return Status.OK;
-          } // else, the default value of -1 or a nonsense. Treat it as an infinitely large batch.
+          } // else, the default value of -1 or a nonsense. Treat it as an infinitely large
+            // batch.
         } // else, we let the batch accumulate
         // Added element to the batch, potentially committing the batch too.
         return Status.BATCHED_OK;

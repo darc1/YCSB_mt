@@ -48,6 +48,11 @@ COMMANDS = {
         "description" : "Execute the transaction phase",
         "main"        : "site.ycsb.Client",
     },
+    "tenants" : {
+        "command"     : "-tenants",
+        "description" : "Execute tenants phase",
+        "main"        : "site.ycsb.TenantsClient",
+    },
 }
 
 DATABASES = {
@@ -89,6 +94,7 @@ DATABASES = {
     "infinispan-cs": "site.ycsb.db.InfinispanRemoteClient",
     "infinispan"   : "site.ycsb.db.InfinispanClient",
     "jdbc"         : "site.ycsb.db.JdbcDBClient",
+    "jdbcmt"         : "site.ycsb.db.JdbcMtDBClient",
     "kudu"         : "site.ycsb.db.KuduYCSBClient",
     "memcached"    : "site.ycsb.db.MemcachedClient",
     "maprdb"       : "site.ycsb.db.mapr.MapRDBClient",

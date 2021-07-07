@@ -473,7 +473,7 @@ public final class Client {
     }
   }
 
-  private static HTraceConfiguration getHTraceConfiguration(Properties props) {
+  static HTraceConfiguration getHTraceConfiguration(Properties props) {
     final Map<String, String> filteredProperties = new HashMap<>();
     for (String key : props.stringPropertyNames()) {
       if (key.startsWith(HTRACE_KEY_PREFIX)) {
@@ -526,17 +526,15 @@ public final class Client {
     return null;
   }
 
-  private static Properties parseArguments(String[] args) {
+  static Properties parseArguments(String[] args) {
     Properties props = new Properties();
     System.err.print("Command line:");
     for (String arg : args) {
       System.err.print(" " + arg);
     }
     System.err.println();
-
     Properties fileprops = new Properties();
     int argindex = 0;
-
     if (args.length == 0) {
       usageMessage();
       System.out.println("At least one argument specifying a workload is required.");
@@ -566,6 +564,8 @@ public final class Client {
         argindex++;
       } else if (args[argindex].compareTo("-load") == 0) {
         props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(false));
+        argindex++;
+      } else if (args[argindex].compareTo("-tenants") == 0) {
         argindex++;
       } else if (args[argindex].compareTo("-t") == 0) {
         props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(true));
