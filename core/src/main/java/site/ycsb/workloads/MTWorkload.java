@@ -21,6 +21,7 @@ import site.ycsb.ByteIterator;
 import site.ycsb.DB;
 import site.ycsb.WorkloadException;
 import site.ycsb.generator.UniformLongGenerator;
+import site.ycsb.generator.*;
 import site.ycsb.measurements.Measurements;
 import site.ycsb.mt.TenantManager;
 
@@ -56,9 +57,11 @@ public class MTWorkload extends CoreWorkload {
         .parseInt(p.getProperty(INSERT_COUNT_PROPERTY, String.valueOf(recordcount - insertstart)));
     double missRatioPercent = Double.valueOf(p.getProperty(MISS_RATIO_PROPERTY, MISS_RATIO_DEFAULT));
     maxVal = (insertstart + insertcount - 1);
-    adjustedMaxVal = (long) (maxVal + maxVal * (missRatioPercent));
+    long missingRecordsCount = (long)(maxVal * (missRatioPercent));
+    adjustedMaxVal = (long) (maxVal + missingRecordsCount);
     System.out.format("adjusted max val to: %d from: %d miss ration is %f percent\n", adjustedMaxVal, maxVal,
         missRatioPercent);
+    transactioninsertkeysequence = new AcknowledgedCounterGenerator(recordcount + missingRecordsCount);
     keychooser = new UniformLongGenerator(insertstart, adjustedMaxVal);
     double unauthRatioPercent = Double.valueOf(p.getProperty(UNAUTH_RATIO_PROPERTY, UNAUTH_RATIO_DEFAULT));
     unauthCount = Math.round(adjustedMaxVal * unauthRatioPercent);
@@ -98,8 +101,9 @@ public class MTWorkload extends CoreWorkload {
   public boolean doTransaction(DB db, Object threadstate) {
 
     long keynum = nextKeynum();
+    //System.out.println("running transaction with keynum: " + keynum + " max val: " + maxVal);
     if (keynum > maxVal) {
-      System.out.println("Got a miss query");
+      //System.out.println("Got a miss query");
       measurements.measure(Measurements.MEASURE_READ_MISS, 1);
     }else if(keynum < maxVal && keynum > maxVal - unauthCount){
       measurements.measure(Measurements.MEASURE_READ_UNAUTH, 1);

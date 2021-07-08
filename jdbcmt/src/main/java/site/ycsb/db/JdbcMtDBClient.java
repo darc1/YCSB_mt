@@ -379,7 +379,7 @@ public class JdbcMtDBClient extends DB {
         conn.setAutoCommit(autoCommit);
 
         shardCount++;
-        conns.add(conn);
+        result.add(conn);
       }
 
       System.out.println("Using shards: " + shardCount + ", batchSize:" + batchSize + ", fetchSize: " + jdbcFetchSize);
