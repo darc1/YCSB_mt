@@ -42,9 +42,29 @@ mvn clean package -P ycsb-release -DskipTests
 
 to run:
 
+create tenants and users:
+```
+./workdir/bin/ycsb.sh tenants jdbcmt -P mt.properties
+```
+properties:
+```
+num_tenants = number of tenants - default: 10
+num_users_per_tenant = number of users per tenant - default: 1
+```
+
 load the database:
 ```
-./bin/ycsb.sh load jdbc -P mt.properties
+./workdir/bin/ycsb.sh load jdbcmt -P mt.properties
+```
+properties:
+```
+miss_ratio = ratio of miss queries - default: 0.01
+unauth_ratio = ratio of unauthorized access - default: 0.01
+```
+
+run the benchmark:
+```
+./workdir/bin/ycsb.sh run jdbcmt -P mt.properties
 ```
 
 properties file:
