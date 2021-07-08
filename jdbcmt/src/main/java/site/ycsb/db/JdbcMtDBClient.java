@@ -108,6 +108,7 @@ public class JdbcMtDBClient extends DB {
   protected String table;
   private boolean sqlserver = false;
   private List<Connection> conns;
+  private Map<String, List<List<Connection>>> tenantConns;
   private boolean initialized = false;
   private Properties props;
   private int jdbcFetchSize;
@@ -117,6 +118,7 @@ public class JdbcMtDBClient extends DB {
   private static final String DEFAULT_PROP = "";
   private ConcurrentMap<StatementType, PreparedStatement> cachedStatements;
   private long numRowsInBatch = 0;
+  private static final String DEFAULT_USERS_PASSWORD = "123456";
   /**
    * DB flavor defines DB-specific syntax and behavior for the particular
    * database. Current database flavors are: {default, phoenix}
@@ -165,6 +167,16 @@ public class JdbcMtDBClient extends DB {
    */
   private Connection getShardConnectionByKey(String key) {
     return conns.get(getShardIndexByKey(key));
+  }
+
+  private Connection getTenantUserConnectionByKey(String key) {
+    String tenantId = tenantManager.getTenantIdForKey(key);
+    List<List<Connection>> usersConns = tenantConns.get(tenantId);
+    int keyhash = Math.abs(key.hashCode());
+    List<Connection> userConns = usersConns.get(keyhash % usersConns.size());
+    Connection conn = userConns.get(keyhash % userConns.size());
+    return conn;
+
   }
 
   private void cleanupAllConnections() throws SQLException {
@@ -227,6 +239,17 @@ public class JdbcMtDBClient extends DB {
         initConnection();
       } else {
         initConnection();
+        tenantConns = new HashMap<String, List<List<Connection>>>();
+        String urls = props.getProperty(CONNECTION_URL, DEFAULT_PROP);
+        String driver = props.getProperty(DRIVER_CLASS);
+        for (String tenantId : tenantManager.getTenantIds()) {
+          tenantConns.put(tenantId, new ArrayList<List<Connection>>());
+          for (String user : tenantManager.getTenantUsers(tenantId)) {
+            List<Connection> userConns = createConnection(urls, user, DEFAULT_USERS_PASSWORD, driver);
+            tenantConns.get(tenantId).add(userConns);
+          }
+        }
+
       }
     }
   }
@@ -289,7 +312,8 @@ public class JdbcMtDBClient extends DB {
 
   public Status createRole(String username, String aclTable, String userTable) {
     try {
-      StringBuilder createRole = new StringBuilder("CREATE ROLE " + username + " WITH LOGIN PASSWORD '123456';");
+      StringBuilder createRole = new StringBuilder(
+          "CREATE ROLE " + username + " WITH LOGIN PASSWORD '" + DEFAULT_USERS_PASSWORD + "';");
       createRole.append("\n");
       createRole.append("GRANT SELECT ON " + userTable + " TO " + username + ";");
       createRole.append("\n");
@@ -326,20 +350,20 @@ public class JdbcMtDBClient extends DB {
     }
   }
 
-  private void createConnection(String urls, String user, String passwd, String driver) throws DBException{
+  private List<Connection> createConnection(String urls, String user, String passwd, String driver) throws DBException {
 
     this.jdbcFetchSize = getIntProperty(props, JDBC_FETCH_SIZE);
     this.batchSize = getIntProperty(props, DB_BATCH_SIZE);
 
     this.autoCommit = getBoolProperty(props, JDBC_AUTO_COMMIT, true);
     this.batchUpdates = getBoolProperty(props, JDBC_BATCH_UPDATES, false);
-
+    List<Connection> result = null;
     try {
       if (driver != null) {
         Class.forName(driver);
       }
       int shardCount = 0;
-      conns = new ArrayList<Connection>(3);
+      result = new ArrayList<Connection>(3);
       // for a longer explanation see the README.md
       // semicolons aren't present in JDBC urls, so we use them to delimit
       // multiple JDBC connections to shard across.
@@ -373,7 +397,10 @@ public class JdbcMtDBClient extends DB {
       System.err.println("Invalid value for fieldcount property. " + e);
       throw new DBException(e);
     }
+
+    return result;
   }
+
   private void initConnection() throws DBException {
 
     if (initialized) {
@@ -390,7 +417,7 @@ public class JdbcMtDBClient extends DB {
       sqlserver = true;
     }
 
-    createConnection(urls, user, passwd, driver);
+    conns = createConnection(urls, user, passwd, driver);
     initialized = true;
   }
 
@@ -430,7 +457,7 @@ public class JdbcMtDBClient extends DB {
 
   private PreparedStatement createAndCacheReadStatement(StatementType readType, String key) throws SQLException {
     String read = dbFlavor.createReadStatement(readType, key);
-    PreparedStatement readStatement = getShardConnectionByKey(key).prepareStatement(read);
+    PreparedStatement readStatement = getTenantUserConnectionByKey(key).prepareStatement(read);
     PreparedStatement stmt = cachedStatements.putIfAbsent(readType, readStatement);
     if (stmt == null) {
       return readStatement;

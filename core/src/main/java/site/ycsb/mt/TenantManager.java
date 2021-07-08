@@ -15,7 +15,8 @@ public final class TenantManager {
   private int seed = 90901;
   private int numTenants;
   private int usersPerTenant;
-  private List<ByteIterator> tenantIds;
+  private List<ByteIterator> tenantIdsBytes;
+  private List<String> tenantIds;
   private Map<String, List<String>> tenantUsers;
   private String invalidTenantId;
   private ByteIterator invalidTenantIdBytes;
@@ -53,12 +54,14 @@ public final class TenantManager {
     numTenants = Integer.parseInt(p.getProperty(NUM_TENANTS_PROPERTY, NUM_TENANTS_DEFAULT));
     usersPerTenant = Integer.parseInt(p.getProperty(NUM_USERS_PER_TENANT_PROPERTY, NUM_USERS_PER_TENANT_DEFAULT));
     tenantUsers = new HashMap<String, List<String>>();
-    tenantIds = new ArrayList<ByteIterator>();
+    tenantIds = new ArrayList<String>();
+    tenantIdsBytes = new ArrayList<ByteIterator>();
     Random tenantRandom = new Random(seed);
     for (int i = 0; i < numTenants; i++) {
       String uuid = generateUuid(tenantRandom);
       System.out.println("Created tenant ID: " + uuid);
-      tenantIds.add(new StringByteIterator(uuid));
+      tenantIds.add(uuid);
+      tenantIdsBytes.add(new StringByteIterator(uuid));
       tenantUsers.put(uuid, new ArrayList<String>());
       for (int user = 0; user < usersPerTenant; user++) {
         String username = "user" + user + "t" + i;
@@ -79,11 +82,15 @@ public final class TenantManager {
     return uuid;
   }
 
-  public ByteIterator getTenantIdForKey(String key) {
+  public ByteIterator getTenantIdBytesForKey(String key) {
+    int index = Math.abs(hashCode()) % tenantIdsBytes.size();
+    return tenantIdsBytes.get(index);
+  }
+
+  public String getTenantIdForKey(String key) {
     int index = Math.abs(hashCode()) % tenantIds.size();
     return tenantIds.get(index);
   }
-
   public int getNumTenants() {
     return numTenants;
   }
