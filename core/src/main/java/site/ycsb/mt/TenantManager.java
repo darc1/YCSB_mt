@@ -82,13 +82,18 @@ public final class TenantManager {
     return uuid;
   }
 
-  public ByteIterator getTenantIdBytesForKey(String key) {
+  public int getTenantIndex(String key){
     int index = Math.abs(key.hashCode()) % tenantIdsBytes.size();
+    return index;
+  }
+
+  public ByteIterator getTenantIdBytesForKey(String key) {
+    int index = getTenantIndex(key);
     return tenantIdsBytes.get(index);
   }
 
   public String getTenantIdForKey(String key) {
-    int index = Math.abs(key.hashCode()) % tenantIds.size();
+    int index = getTenantIndex(key);
     return tenantIds.get(index);
   }
   public int getNumTenants() {

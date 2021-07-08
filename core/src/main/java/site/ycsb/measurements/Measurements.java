@@ -47,6 +47,7 @@ public class Measurements {
   public static final String MEASURE_READ_MISS = "read_miss";
   public static final String MEASURE_READ_UNAUTH = "read_unauthorized";
   public static final String MEASURE_READ_VALID = "read_valid";
+  public static final String MEASURE_KEY_TENANT_SPREAD = "tenant_key_spread";
 
   private static Measurements singleton = null;
   private static Properties measurementproperties = null;
@@ -120,8 +121,9 @@ public class Measurements {
     }
 
     opToMesurementMap.put(MEASURE_READ_MISS, new OneMeasurementCounter(MEASURE_READ_MISS));
-    opToMesurementMap.put("read_unauthorized", new OneMeasurementCounter(MEASURE_READ_UNAUTH));
-    opToMesurementMap.put("read_valid", new OneMeasurementCounter(MEASURE_READ_VALID));
+    opToMesurementMap.put(MEASURE_READ_UNAUTH, new OneMeasurementCounter(MEASURE_READ_UNAUTH));
+    opToMesurementMap.put(MEASURE_READ_VALID, new OneMeasurementCounter(MEASURE_READ_VALID));
+    opToMesurementMap.put(MEASURE_KEY_TENANT_SPREAD, new OneMeasurementSpread(MEASURE_KEY_TENANT_SPREAD));
 
   }
 

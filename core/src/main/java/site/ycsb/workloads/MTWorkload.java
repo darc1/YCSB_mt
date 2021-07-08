@@ -75,6 +75,7 @@ public class MTWorkload extends CoreWorkload {
   protected HashMap<String, ByteIterator> buildValuesWithTenant(String key, int keynum) {
     HashMap<String, ByteIterator> values = super.buildValues(key);
     ByteIterator tenantIdValue = tenantManager.getTenantIdBytesForKey(key);
+    measurements.measure(Measurements.MEASURE_KEY_TENANT_SPREAD, tenantManager.getTenantIndex(key));
     if (unauthCount > 0 && keynum > maxVal - unauthCount) {
       System.out.println("Created record for invalid tenant.");
       tenantIdValue = tenantManager.getInvalidTenant();
