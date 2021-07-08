@@ -77,7 +77,7 @@ public class MTWorkload extends CoreWorkload {
     ByteIterator tenantIdValue = tenantManager.getTenantIdBytesForKey(key);
     measurements.measure(Measurements.MEASURE_KEY_TENANT_SPREAD, tenantManager.getTenantIndex(key));
     if (unauthCount > 0 && keynum > maxVal - unauthCount) {
-      System.out.println("Created record for invalid tenant.");
+      //System.out.println("Created record for invalid tenant.");
       tenantIdValue = tenantManager.getInvalidTenant();
     }
     values.put(TENANT_ID_FIELD, tenantIdValue);

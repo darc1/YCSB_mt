@@ -117,6 +117,7 @@ public class JdbcMtDBClient extends DB {
   private boolean batchUpdates;
   private static final String DEFAULT_PROP = "";
   private ConcurrentMap<StatementType, PreparedStatement> cachedStatements;
+  private ConcurrentMap<String, ConcurrentMap<StatementType, PreparedStatement>> tenantCachedStatements;
   private long numRowsInBatch = 0;
   private static final String DEFAULT_USERS_PASSWORD = "123456";
   /**
@@ -172,11 +173,17 @@ public class JdbcMtDBClient extends DB {
   private Connection getTenantUserConnectionByKey(String key) {
     String tenantId = tenantManager.getTenantIdForKey(key);
     List<List<Connection>> usersConns = tenantConns.get(tenantId);
+    //System.out.println("using tenant id: " + tenantId + " for key: " + key + " conns: " + usersConns.size());
     int keyhash = Math.abs(key.hashCode());
     List<Connection> userConns = usersConns.get(keyhash % usersConns.size());
     Connection conn = userConns.get(keyhash % userConns.size());
+
     return conn;
 
+  }
+
+  private String getUserName(String key) throws SQLException {
+    return getTenantUserConnectionByKey(key).getMetaData().getUserName();
   }
 
   private void cleanupAllConnections() throws SQLException {
@@ -239,6 +246,7 @@ public class JdbcMtDBClient extends DB {
         initConnection();
       } else {
         initConnection();
+        tenantCachedStatements = new ConcurrentHashMap<String, ConcurrentMap<StatementType, PreparedStatement>>();
         tenantConns = new HashMap<String, List<List<Connection>>>();
         String urls = props.getProperty(CONNECTION_URL, DEFAULT_PROP);
         String driver = props.getProperty(DRIVER_CLASS);
@@ -246,6 +254,7 @@ public class JdbcMtDBClient extends DB {
           tenantConns.put(tenantId, new ArrayList<List<Connection>>());
           for (String user : tenantManager.getTenantUsers(tenantId)) {
             List<Connection> userConns = createConnection(urls, user, DEFAULT_USERS_PASSWORD, driver);
+            tenantCachedStatements.put(user, new ConcurrentHashMap<>());
             tenantConns.get(tenantId).add(userConns);
           }
         }
@@ -369,7 +378,7 @@ public class JdbcMtDBClient extends DB {
       // multiple JDBC connections to shard across.
       final String[] urlArr = urls.split(";");
       for (String url : urlArr) {
-        System.out.println("Adding shard node URL: " + url);
+        System.out.println("Adding shard node URL: " + url + "user: " + user + " password: " + passwd);
         Connection conn = DriverManager.getConnection(url, user, passwd);
 
         // Since there is no explicit commit method in the DB interface, all
@@ -457,8 +466,10 @@ public class JdbcMtDBClient extends DB {
 
   private PreparedStatement createAndCacheReadStatement(StatementType readType, String key) throws SQLException {
     String read = dbFlavor.createReadStatement(readType, key);
-    PreparedStatement readStatement = getTenantUserConnectionByKey(key).prepareStatement(read);
-    PreparedStatement stmt = cachedStatements.putIfAbsent(readType, readStatement);
+    Connection conn = getTenantUserConnectionByKey(key);
+    PreparedStatement readStatement = conn.prepareStatement(read);
+    String user = conn.getMetaData().getUserName();
+    PreparedStatement stmt = tenantCachedStatements.get(user).putIfAbsent(readType, readStatement);
     if (stmt == null) {
       return readStatement;
     }
@@ -502,7 +513,12 @@ public class JdbcMtDBClient extends DB {
   public Status read(String tableName, String key, Set<String> fields, Map<String, ByteIterator> result) {
     try {
       StatementType type = new StatementType(StatementType.Type.READ, tableName, 1, "", getShardIndexByKey(key));
-      PreparedStatement readStatement = cachedStatements.get(type);
+      String user = getUserName(key);
+      ConcurrentMap<StatementType, PreparedStatement> tenantCache = tenantCachedStatements.getOrDefault(user, null);
+      PreparedStatement readStatement = null;
+      if (tenantCache != null) {
+        readStatement = tenantCache.getOrDefault(type, null);
+      }
       if (readStatement == null) {
         readStatement = createAndCacheReadStatement(type, key);
       }

@@ -83,7 +83,7 @@ public final class TenantManager {
   }
 
   public int getTenantIndex(String key){
-    int index = Math.abs(key.hashCode()) % tenantIdsBytes.size();
+    int index = Math.abs(key.hashCode()) % tenantIds.size();
     return index;
   }
 
