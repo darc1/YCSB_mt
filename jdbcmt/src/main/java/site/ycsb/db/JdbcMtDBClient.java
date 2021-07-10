@@ -108,7 +108,7 @@ public class JdbcMtDBClient extends DB {
   protected String table;
   private boolean sqlserver = false;
   private List<Connection> conns;
-  private Map<String, List<List<Connection>>> tenantConns;
+  private Map<String, List<List<UserConn>>> tenantConns;
   private boolean initialized = false;
   private Properties props;
   private int jdbcFetchSize;
@@ -126,6 +126,24 @@ public class JdbcMtDBClient extends DB {
    */
   private DBFlavor dbFlavor;
   private TenantManager tenantManager;
+
+  private class UserConn {
+    private String user;
+    private Connection conn;
+
+    UserConn(String user, Connection conn) {
+      this.user = user;
+      this.conn = conn;
+    }
+
+    Connection getConnection() {
+      return this.conn;
+    }
+
+    String getUser() {
+      return this.user;
+    }
+  }
 
   /**
    * Ordered field information for insert and update statements.
@@ -170,20 +188,24 @@ public class JdbcMtDBClient extends DB {
     return conns.get(getShardIndexByKey(key));
   }
 
-  private Connection getTenantUserConnectionByKey(String key) {
+  private UserConn getTenantUserConnByKey(String key) {
     String tenantId = tenantManager.getTenantIdForKey(key);
-    List<List<Connection>> usersConns = tenantConns.get(tenantId);
-    //System.out.println("using tenant id: " + tenantId + " for key: " + key + " conns: " + usersConns.size());
+    List<List<UserConn>> usersConns = tenantConns.get(tenantId);
+    // System.out.println("using tenant id: " + tenantId + " for key: " + key + "
+    // conns: " + usersConns.size());
     int keyhash = Math.abs(key.hashCode());
-    List<Connection> userConns = usersConns.get(keyhash % usersConns.size());
-    Connection conn = userConns.get(keyhash % userConns.size());
-
+    List<UserConn> userConns = usersConns.get(keyhash % usersConns.size());
+    UserConn conn = userConns.get(keyhash % userConns.size());
     return conn;
 
   }
 
+  private Connection getTenantUserConnectionByKey(String key) {
+    return getTenantUserConnByKey(key).getConnection();
+  }
+
   private String getUserName(String key) throws SQLException {
-    return getTenantUserConnectionByKey(key).getMetaData().getUserName();
+    return getTenantUserConnByKey(key).getUser();
   }
 
   private void cleanupAllConnections() throws SQLException {
@@ -247,13 +269,17 @@ public class JdbcMtDBClient extends DB {
       } else {
         initConnection();
         tenantCachedStatements = new ConcurrentHashMap<String, ConcurrentMap<StatementType, PreparedStatement>>();
-        tenantConns = new HashMap<String, List<List<Connection>>>();
+        tenantConns = new HashMap<String, List<List<UserConn>>>();
         String urls = props.getProperty(CONNECTION_URL, DEFAULT_PROP);
         String driver = props.getProperty(DRIVER_CLASS);
         for (String tenantId : tenantManager.getTenantIds()) {
-          tenantConns.put(tenantId, new ArrayList<List<Connection>>());
+          tenantConns.put(tenantId, new ArrayList<List<UserConn>>());
           for (String user : tenantManager.getTenantUsers(tenantId)) {
-            List<Connection> userConns = createConnection(urls, user, DEFAULT_USERS_PASSWORD, driver);
+            List<Connection> dbConns = createConnection(urls, user, DEFAULT_USERS_PASSWORD, driver);
+            List<UserConn> userConns = new ArrayList<>();
+            for (Connection conn : dbConns) {
+              userConns.add(new UserConn(user, conn));
+            }
             tenantCachedStatements.put(user, new ConcurrentHashMap<>());
             tenantConns.get(tenantId).add(userConns);
           }
@@ -466,10 +492,9 @@ public class JdbcMtDBClient extends DB {
 
   private PreparedStatement createAndCacheReadStatement(StatementType readType, String key) throws SQLException {
     String read = dbFlavor.createReadStatement(readType, key);
-    Connection conn = getTenantUserConnectionByKey(key);
-    PreparedStatement readStatement = conn.prepareStatement(read);
-    String user = conn.getMetaData().getUserName();
-    PreparedStatement stmt = tenantCachedStatements.get(user).putIfAbsent(readType, readStatement);
+    UserConn userConn = getTenantUserConnByKey(key);
+    PreparedStatement readStatement = userConn.getConnection().prepareStatement(read);
+    PreparedStatement stmt = tenantCachedStatements.get(userConn.getUser()).putIfAbsent(readType, readStatement);
     if (stmt == null) {
       return readStatement;
     }

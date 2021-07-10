@@ -103,7 +103,7 @@ public class MTWorkload extends CoreWorkload {
 
     long keynum = nextKeynum();
     //System.out.println("running transaction with keynum: " + keynum + " max val: " + maxVal);
-    if (keynum > maxVal) {
+    if (keynum >= maxVal) {
       //System.out.println("Got a miss query");
       measurements.measure(Measurements.MEASURE_READ_MISS, 1);
     }else if(keynum < maxVal && keynum > maxVal - unauthCount){
