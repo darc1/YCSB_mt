@@ -40,6 +40,7 @@ public class MTWorkload extends CoreWorkload {
   private long maxVal;
   private long adjustedMaxVal;
   private long unauthCount;
+  private boolean logKeys;
 
   public MTWorkload() {
     super();
@@ -52,6 +53,7 @@ public class MTWorkload extends CoreWorkload {
     this.tenantManager = TenantManager.getInstance();
     this.tenantManager.init(p);
 
+    logKeys = Boolean.parseBoolean(p.getProperty("log_keys", "false"));
     long insertstart = Long.parseLong(p.getProperty(INSERT_START_PROPERTY, INSERT_START_PROPERTY_DEFAULT));
     long insertcount = Integer
         .parseInt(p.getProperty(INSERT_COUNT_PROPERTY, String.valueOf(recordcount - insertstart)));
@@ -106,6 +108,7 @@ public class MTWorkload extends CoreWorkload {
     if (keynum >= maxVal) {
       //System.out.println("Got a miss query");
       measurements.measure(Measurements.MEASURE_READ_MISS, 1);
+      //System.out.println("miss key val: " + getDbKey(keynum));
     }else if(keynum < maxVal && keynum > maxVal - unauthCount){
       measurements.measure(Measurements.MEASURE_READ_UNAUTH, 1);
     } else {
@@ -113,7 +116,9 @@ public class MTWorkload extends CoreWorkload {
     }
 
     String keyname = getDbKey(keynum);
-
+    if(logKeys){
+      System.out.println("keys: " + keyname + " " + keynum);
+    }
     HashSet<String> fields = null;
 
     if (!readallfields) {

@@ -48,6 +48,8 @@ public class DBWrapper extends DB {
   private final String scopeStringRead;
   private final String scopeStringScan;
   private final String scopeStringUpdate;
+  private boolean logReadMin;
+  private long minReadLatency = Long.MAX_VALUE;
 
   public DBWrapper(final DB db, final Tracer tracer) {
     this.db = db;
@@ -101,6 +103,9 @@ public class DBWrapper extends DB {
           this.reportLatencyForEachError + " and specific error codes to track" +
           " for latency are: " + this.latencyTrackedErrors.toString());
     }
+    
+    logReadMin = Boolean.parseBoolean(db.getProperties().getProperty("log_read_min", "false"));
+    System.out.println("log min read: " + logReadMin);
   }
 
   /**
@@ -134,6 +139,11 @@ public class DBWrapper extends DB {
       long st = System.nanoTime();
       Status res = db.read(table, key, fields, result);
       long en = System.nanoTime();
+      int elapsed = (int) ((en - st) / 1000);
+      if(logReadMin && elapsed < minReadLatency){
+        System.out.println("new min read: " + elapsed + " key: " + key);
+        minReadLatency = elapsed;
+      }
       measure("READ", res, ist, st, en);
       measurements.reportStatus("READ", res);
       return res;
