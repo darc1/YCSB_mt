@@ -57,17 +57,25 @@ public class MTWorkload extends CoreWorkload {
     long insertstart = Long.parseLong(p.getProperty(INSERT_START_PROPERTY, INSERT_START_PROPERTY_DEFAULT));
     long insertcount = Integer
         .parseInt(p.getProperty(INSERT_COUNT_PROPERTY, String.valueOf(recordcount - insertstart)));
-    double missRatioPercent = Double.valueOf(p.getProperty(MISS_RATIO_PROPERTY, MISS_RATIO_DEFAULT));
+    double missRatio = Double.valueOf(p.getProperty(MISS_RATIO_PROPERTY, MISS_RATIO_DEFAULT));
+    if(missRatio >= 1){
+      System.out.println("miss_ration >= 1 setting to: 0.99");
+      missRatio = 0.99;
+    }
     maxVal = (insertstart + insertcount - 1);
-    long missingRecordsCount = (long) (maxVal * (missRatioPercent));
-    adjustedMaxVal = (long) (maxVal + missingRecordsCount);
+    adjustedMaxVal = (long) (maxVal/(1 - missRatio));
+    long missingRecordsCount = adjustedMaxVal - maxVal;
     System.out.format("adjusted max val to: %d from: %d miss ration is %f percent\n", adjustedMaxVal, maxVal,
-        missRatioPercent);
+        missRatio);
     transactioninsertkeysequence = new AcknowledgedCounterGenerator(recordcount + missingRecordsCount);
     keychooser = new UniformLongGenerator(insertstart, adjustedMaxVal);
-    double unauthRatioPercent = Double.valueOf(p.getProperty(UNAUTH_RATIO_PROPERTY, UNAUTH_RATIO_DEFAULT));
-    unauthCount = Math.round(adjustedMaxVal * unauthRatioPercent);
-    System.out.println("unauthorized records count: " + unauthCount + " unauthorized precent: " + unauthRatioPercent);
+    double unauthRatio = Double.valueOf(p.getProperty(UNAUTH_RATIO_PROPERTY, UNAUTH_RATIO_DEFAULT));
+    if(unauthRatio >= 0.1){
+      System.out.println("unauth_ratio >= 0.1 setting to: 0.1");
+      unauthRatio = 0.1;
+    }
+    unauthCount = Math.round(adjustedMaxVal * (1 - unauthRatio)) - adjustedMaxVal;
+    System.out.println("unauthorized records count: " + unauthCount + " unauthorized precent: " + unauthRatio);
 
   }
 
