@@ -528,7 +528,7 @@ public class JdbcMtDBClient extends DB {
       resultSet.close();
       return Status.OK;
     } catch (SQLException e) {
-      System.err.println("Error in processing read of table " + tableName + ": " + e);
+      System.err.println("Error in processing read of table " + tableName + ": " + " key: " + key + " - " + e);
       return Status.ERROR;
     }
   }
