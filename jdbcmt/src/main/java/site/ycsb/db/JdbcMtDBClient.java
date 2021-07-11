@@ -182,7 +182,7 @@ public class JdbcMtDBClient extends DB {
 
   }
 
-  private String getUserName(String key) throws SQLException {
+  private String getUserName(String key){
     return getTenantUserConnByKey(key).getUser();
   }
 
@@ -528,7 +528,7 @@ public class JdbcMtDBClient extends DB {
       resultSet.close();
       return Status.OK;
     } catch (SQLException e) {
-      System.err.println("Error in processing read of table " + tableName + ": " + " key: " + key + " - " + e);
+      System.err.println("Error in processing read of table " + tableName + ": " + " key: " + key + " user: " + getUserName(key) + e);
       return Status.ERROR;
     }
   }
