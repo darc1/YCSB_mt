@@ -119,31 +119,13 @@ public class JdbcMtDBClient extends DB {
   private ConcurrentMap<StatementType, PreparedStatement> cachedStatements;
   private ConcurrentMap<String, ConcurrentMap<StatementType, PreparedStatement>> tenantCachedStatements;
   private long numRowsInBatch = 0;
-  private static final String DEFAULT_USERS_PASSWORD = "123456";
+  static final String DEFAULT_USERS_PASSWORD = "123456";
   /**
    * DB flavor defines DB-specific syntax and behavior for the particular
    * database. Current database flavors are: {default, phoenix}
    */
   private DBFlavor dbFlavor;
   private TenantManager tenantManager;
-
-  private class UserConn {
-    private String user;
-    private Connection conn;
-
-    UserConn(String user, Connection conn) {
-      this.user = user;
-      this.conn = conn;
-    }
-
-    Connection getConnection() {
-      return this.conn;
-    }
-
-    String getUser() {
-      return this.user;
-    }
-  }
 
   /**
    * Ordered field information for insert and update statements.
@@ -200,10 +182,6 @@ public class JdbcMtDBClient extends DB {
 
   }
 
-  private Connection getTenantUserConnectionByKey(String key) {
-    return getTenantUserConnByKey(key).getConnection();
-  }
-
   private String getUserName(String key) throws SQLException {
     return getTenantUserConnByKey(key).getUser();
   }
@@ -237,7 +215,7 @@ public class JdbcMtDBClient extends DB {
    * Returns parsed boolean value from the properties if set, otherwise returns
    * defaultVal.
    */
-  private static boolean getBoolProperty(Properties props, String key, boolean defaultVal) {
+  static boolean getBoolProperty(Properties props, String key, boolean defaultVal) {
     String valueStr = props.getProperty(key);
     if (valueStr != null) {
       return Boolean.parseBoolean(valueStr);
@@ -246,7 +224,7 @@ public class JdbcMtDBClient extends DB {
   }
 
   @Override
-  public void init() throws DBException {
+  public synchronized void init() throws DBException {
 
     props = getProperties();
     table = props.getProperty(TABLENAME_PROPERTY, TABLENAME_PROPERTY_DEFAULT);
@@ -268,23 +246,10 @@ public class JdbcMtDBClient extends DB {
         initConnection();
       } else {
         initConnection();
-        tenantCachedStatements = new ConcurrentHashMap<String, ConcurrentMap<StatementType, PreparedStatement>>();
-        tenantConns = new HashMap<String, List<List<UserConn>>>();
-        String urls = props.getProperty(CONNECTION_URL, DEFAULT_PROP);
-        String driver = props.getProperty(DRIVER_CLASS);
-        for (String tenantId : tenantManager.getTenantIds()) {
-          tenantConns.put(tenantId, new ArrayList<List<UserConn>>());
-          for (String user : tenantManager.getTenantUsers(tenantId)) {
-            List<Connection> dbConns = createConnection(urls, user, DEFAULT_USERS_PASSWORD, driver);
-            List<UserConn> userConns = new ArrayList<>();
-            for (Connection conn : dbConns) {
-              userConns.add(new UserConn(user, conn));
-            }
-            tenantCachedStatements.put(user, new ConcurrentHashMap<>());
-            tenantConns.get(tenantId).add(userConns);
-          }
-        }
-
+        JdbcMtDBConnectionPool pool = JdbcMtDBConnectionPool.instance();
+        pool.init(props, tenantManager);
+        tenantConns = pool.getTenantConns();
+        tenantCachedStatements = pool.getTenantCachedStatements();
       }
     }
   }
@@ -387,11 +352,6 @@ public class JdbcMtDBClient extends DB {
 
   private List<Connection> createConnection(String urls, String user, String passwd, String driver) throws DBException {
 
-    this.jdbcFetchSize = getIntProperty(props, JDBC_FETCH_SIZE);
-    this.batchSize = getIntProperty(props, DB_BATCH_SIZE);
-
-    this.autoCommit = getBoolProperty(props, JDBC_AUTO_COMMIT, true);
-    this.batchUpdates = getBoolProperty(props, JDBC_BATCH_UPDATES, false);
     List<Connection> result = null;
     try {
       if (driver != null) {
@@ -418,8 +378,6 @@ public class JdbcMtDBClient extends DB {
       }
 
       System.out.println("Using shards: " + shardCount + ", batchSize:" + batchSize + ", fetchSize: " + jdbcFetchSize);
-
-      cachedStatements = new ConcurrentHashMap<StatementType, PreparedStatement>();
 
       this.dbFlavor = DBFlavor.fromJdbcUrl(urlArr[0]);
     } catch (ClassNotFoundException e) {
@@ -452,7 +410,13 @@ public class JdbcMtDBClient extends DB {
       sqlserver = true;
     }
 
+    this.jdbcFetchSize = getIntProperty(props, JDBC_FETCH_SIZE);
+    this.batchSize = getIntProperty(props, DB_BATCH_SIZE);
+
+    this.autoCommit = getBoolProperty(props, JDBC_AUTO_COMMIT, true);
+    this.batchUpdates = getBoolProperty(props, JDBC_BATCH_UPDATES, false);
     conns = createConnection(urls, user, passwd, driver);
+    cachedStatements = new ConcurrentHashMap<StatementType, PreparedStatement>();
     initialized = true;
   }
 
@@ -548,7 +512,9 @@ public class JdbcMtDBClient extends DB {
         readStatement = createAndCacheReadStatement(type, key);
       }
       readStatement.setString(1, key);
+      //System.out.println("executeQuery: " + key + " user: " + user);
       ResultSet resultSet = readStatement.executeQuery();
+      //System.out.println("executeQuery: " + key + " done. " + user);
       if (!resultSet.next()) {
         resultSet.close();
         return Status.NOT_FOUND;

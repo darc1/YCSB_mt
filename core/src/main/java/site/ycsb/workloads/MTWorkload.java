@@ -59,7 +59,7 @@ public class MTWorkload extends CoreWorkload {
         .parseInt(p.getProperty(INSERT_COUNT_PROPERTY, String.valueOf(recordcount - insertstart)));
     double missRatioPercent = Double.valueOf(p.getProperty(MISS_RATIO_PROPERTY, MISS_RATIO_DEFAULT));
     maxVal = (insertstart + insertcount - 1);
-    long missingRecordsCount = (long)(maxVal * (missRatioPercent));
+    long missingRecordsCount = (long) (maxVal * (missRatioPercent));
     adjustedMaxVal = (long) (maxVal + missingRecordsCount);
     System.out.format("adjusted max val to: %d from: %d miss ration is %f percent\n", adjustedMaxVal, maxVal,
         missRatioPercent);
@@ -79,7 +79,7 @@ public class MTWorkload extends CoreWorkload {
     ByteIterator tenantIdValue = tenantManager.getTenantIdBytesForKey(key);
     measurements.measure(Measurements.MEASURE_KEY_TENANT_SPREAD, tenantManager.getTenantIndex(key));
     if (unauthCount > 0 && keynum > maxVal - unauthCount) {
-      //System.out.println("Created record for invalid tenant.");
+      // System.out.println("Created record for invalid tenant.");
       tenantIdValue = tenantManager.getInvalidTenant();
     }
     values.put(TENANT_ID_FIELD, tenantIdValue);
@@ -104,20 +104,22 @@ public class MTWorkload extends CoreWorkload {
   public boolean doTransaction(DB db, Object threadstate) {
 
     long keynum = nextKeynum();
-    //System.out.println("running transaction with keynum: " + keynum + " max val: " + maxVal);
+    // System.out.println("running transaction with keynum: " + keynum + " max val:
+    // " + maxVal);
     if (keynum >= maxVal) {
-      //System.out.println("Got a miss query");
+      // System.out.println("Got a miss query");
       measurements.measure(Measurements.MEASURE_READ_MISS, 1);
-      //System.out.println("miss key val: " + getDbKey(keynum));
-    }else if(keynum < maxVal && keynum > maxVal - unauthCount){
+      // System.out.println("miss key val: " + getDbKey(keynum));
+    } else if (keynum < maxVal && keynum > maxVal - unauthCount) {
       measurements.measure(Measurements.MEASURE_READ_UNAUTH, 1);
     } else {
       measurements.measure(Measurements.MEASURE_READ_VALID, 1);
     }
 
     String keyname = getDbKey(keynum);
-    if(logKeys){
-      System.out.println("keys: " + keyname + " " + keynum);
+    if (logKeys) {
+      MTThreadState state = (MTThreadState)threadstate;
+      System.out.println("keys: " + keyname + " " + keynum + " thread id: " + state.getThreadid() + " start.");
     }
     HashSet<String> fields = null;
 
@@ -138,6 +140,28 @@ public class MTWorkload extends CoreWorkload {
     if (dataintegrity) {
       verifyRow(keyname, cells);
     }
+    if (logKeys) {
+      MTThreadState state = (MTThreadState)threadstate;
+      System.out.println("keys: " + keyname + " " + keynum + " thread id: " + state.getThreadid() + " complete.");
+    }
     return true;
   }
+
+  @Override
+  public Object initThread(Properties p, int mythreadid, int threadcount) throws WorkloadException {
+    return new MTThreadState(mythreadid);
+  }
+
+  class MTThreadState {
+    private int threadid;
+
+    MTThreadState(int threadid) {
+      this.threadid = threadid;
+    }
+
+    public int getThreadid() {
+      return threadid;
+    }
+  }
+
 }

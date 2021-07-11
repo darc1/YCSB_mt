@@ -154,6 +154,7 @@ public class ClientThread implements Runnable {
       e.printStackTrace();
       e.printStackTrace(System.out);
     } finally {
+      System.out.println("thread: " + threadid + " complete");
       completeLatch.countDown();
     }
   }
