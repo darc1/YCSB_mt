@@ -23,6 +23,7 @@ package site.ycsb;
 public class Status {
   private final String name;
   private final String description;
+  private int elapsed;
 
   /**
    * @param name A short name for the status.
@@ -45,6 +46,14 @@ public class Status {
   @Override
   public String toString() {
     return "Status [name=" + name + ", description=" + description + "]";
+  }
+
+  public void setElapsed(long startTimeNanos, long endTimeNanos){
+    this.elapsed = (int) ((endTimeNanos - startTimeNanos) / 1000);
+  }
+  
+  public int getElapsed(){
+    return elapsed;
   }
 
   @Override

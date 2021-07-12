@@ -185,6 +185,7 @@ public class DBWrapper extends DB {
         measurementName = op + "-FAILED";
       }
     }
+    result.setElapsed(startTimeNanos, endTimeNanos);
     measurements.measure(measurementName,
         (int) ((endTimeNanos - startTimeNanos) / 1000));
     measurements.measureIntended(measurementName,

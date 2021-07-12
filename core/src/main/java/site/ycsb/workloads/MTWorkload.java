@@ -17,6 +17,7 @@
  */
 package site.ycsb.workloads;
 
+import site.ycsb.Status;
 import site.ycsb.ByteIterator;
 import site.ycsb.DB;
 import site.ycsb.WorkloadException;
@@ -112,16 +113,20 @@ public class MTWorkload extends CoreWorkload {
   public boolean doTransaction(DB db, Object threadstate) {
 
     long keynum = nextKeynum();
+    String measureName = null;
     // System.out.println("running transaction with keynum: " + keynum + " max val:
     // " + maxVal);
     if (keynum >= maxVal) {
       // System.out.println("Got a miss query");
       measurements.measure(Measurements.MEASURE_READ_MISS, 1);
+      measureName = "X-" + Measurements.MEASURE_READ_MISS;
       // System.out.println("miss key val: " + getDbKey(keynum));
     } else if (keynum < maxVal && keynum > maxVal - unauthCount) {
       measurements.measure(Measurements.MEASURE_READ_UNAUTH, 1);
+      measureName = "X-" + Measurements.MEASURE_READ_UNAUTH;
     } else {
       measurements.measure(Measurements.MEASURE_READ_VALID, 1);
+      measureName = "X-" + Measurements.MEASURE_READ_VALID;
     }
 
     String keyname = getDbKey(keynum);
@@ -143,8 +148,8 @@ public class MTWorkload extends CoreWorkload {
     }
 
     HashMap<String, ByteIterator> cells = new HashMap<String, ByteIterator>();
-    db.read(table, keyname, fields, cells);
-
+    Status status = db.read(table, keyname, fields, cells);
+    measurements.measure(measureName, status.getElapsed());
     if (dataintegrity) {
       verifyRow(keyname, cells);
     }
