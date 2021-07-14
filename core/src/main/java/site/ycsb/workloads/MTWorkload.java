@@ -129,13 +129,13 @@ public class MTWorkload extends CoreWorkload {
     
     double next = ThreadLocalRandom.current().nextDouble();
     if(next <= validSpace){
-      System.out.println("generating valid key: " + next);
+      //System.out.println("generating valid key: " + next);
       return chooseKey(keychooser);
     }else if(next > validSpace && next <= 1 - unauthSpace){
-      System.out.println("generating miss key: " + next);
+      //System.out.println("generating miss key: " + next);
       return chooseKey(missKeychooser);
     }else{
-      System.out.println("generating unauth key: " + next);
+      //System.out.println("generating unauth key: " + next);
       return chooseKey(unauthKeychooser);
     }
   }
@@ -162,12 +162,12 @@ public class MTWorkload extends CoreWorkload {
     String measureName = null;
     // System.out.println("running transaction with keynum: " + keynum + " max val:
     // " + maxVal);
-    if (keynum >= maxVal) {
+    if (keynum > maxVal) {
       // System.out.println("Got a miss query");
       measurements.measure(Measurements.MEASURE_READ_MISS, 1);
       measureName = "X-" + Measurements.MEASURE_READ_MISS;
       // System.out.println("miss key val: " + getDbKey(keynum));
-    } else if (keynum < maxVal && keynum > maxVal - unauthCount) {
+    } else if (keynum <= maxVal && keynum > maxVal - unauthCount) {
       measurements.measure(Measurements.MEASURE_READ_UNAUTH, 1);
       measureName = "X-" + Measurements.MEASURE_READ_UNAUTH;
     } else {
