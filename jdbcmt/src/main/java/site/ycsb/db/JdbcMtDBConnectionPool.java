@@ -12,11 +12,13 @@ import site.ycsb.mt.TenantManager;
 public final class JdbcMtDBConnectionPool {
 
   private static final String DEFAULT_PROP = "";
-  private Map<String, List<List<UserConn>>> tenantConns;
+  private Map<String, List<UserConn>> tenantConns;
   private ConcurrentMap<String, ConcurrentMap<StatementType, PreparedStatement>> tenantCachedStatements;
   private static JdbcMtDBConnectionPool instance;
   private boolean initialized = false;
   private boolean autoCommit;
+  private Random random;
+  private int seed = 90901;
 
   public static synchronized JdbcMtDBConnectionPool instance() {
     if (instance == null) {
@@ -34,34 +36,36 @@ public final class JdbcMtDBConnectionPool {
       return;
     }
 
+    random = new Random(seed);
+
     this.autoCommit = JdbcMtDBClient.getBoolProperty(props, JdbcMtDBClient.JDBC_AUTO_COMMIT, true);
-    tenantConns = new HashMap<String, List<List<UserConn>>>();
+    tenantConns = new HashMap<String, List<UserConn>>();
     tenantCachedStatements = new ConcurrentHashMap<String, ConcurrentMap<StatementType, PreparedStatement>>();
     String urls = props.getProperty(JdbcMtDBClient.CONNECTION_URL, DEFAULT_PROP);
     String driver = props.getProperty(JdbcMtDBClient.DRIVER_CLASS);
     for (String tenantId : tenantManager.getTenantIds()) {
-      tenantConns.put(tenantId, new ArrayList<List<UserConn>>());
-      for (String user : tenantManager.getTenantUsers(tenantId)) {
-        List<Connection> dbConns = createConnection(urls, user, JdbcMtDBClient.DEFAULT_USERS_PASSWORD, driver);
-        List<UserConn> userConns = new ArrayList<>();
-        for (Connection conn : dbConns) {
-          userConns.add(new UserConn(user, conn));
-        }
-        tenantCachedStatements.put(user, new ConcurrentHashMap<>());
-        tenantConns.get(tenantId).add(userConns);
+      tenantConns.put(tenantId, new ArrayList<UserConn>());
+      String user = tenantManager.getTenantUsers(tenantId)
+          .get(random.nextInt(tenantManager.getTenantUsers(tenantId).size()));
+      List<Connection> dbConns = createConnection(urls, user, JdbcMtDBClient.DEFAULT_USERS_PASSWORD, driver);
+      List<UserConn> userConns = new ArrayList<>();
+      for (Connection conn : dbConns) {
+        userConns.add(new UserConn(user, conn));
       }
+      tenantCachedStatements.put(user, new ConcurrentHashMap<>());
+      tenantConns.get(tenantId).addAll(userConns);
     }
 
     initialized = true;
   }
 
-  public Map<String, List<List<UserConn>>> getTenantConns() {
+  public Map<String, List<UserConn>> getTenantConns() {
     return this.tenantConns;
   }
 
   public ConcurrentMap<String, ConcurrentMap<StatementType, PreparedStatement>> getTenantCachedStatements() {
     ConcurrentMap<String, ConcurrentMap<StatementType, PreparedStatement>> result = new ConcurrentHashMap<>();
-    for(String user: this.tenantCachedStatements.keySet()){
+    for (String user : this.tenantCachedStatements.keySet()) {
       result.put(user, new ConcurrentHashMap<>());
     }
     return result;

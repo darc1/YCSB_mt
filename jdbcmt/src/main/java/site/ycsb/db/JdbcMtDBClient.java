@@ -108,7 +108,7 @@ public class JdbcMtDBClient extends DB {
   protected String table;
   private boolean sqlserver = false;
   private List<Connection> conns;
-  private Map<String, List<List<UserConn>>> tenantConns;
+  private Map<String, List<UserConn>> tenantConns;
   private boolean initialized = false;
   private Properties props;
   private int jdbcFetchSize;
@@ -170,19 +170,27 @@ public class JdbcMtDBClient extends DB {
     return conns.get(getShardIndexByKey(key));
   }
 
-  private UserConn getTenantUserConnByKey(String key) {
+  private int getTenantUserConnIdxByKey(String key) {
     String tenantId = tenantManager.getTenantIdForKey(key);
-    List<List<UserConn>> usersConns = tenantConns.get(tenantId);
+    List<UserConn> userConns = tenantConns.get(tenantId);
     // System.out.println("using tenant id: " + tenantId + " for key: " + key + "
     // conns: " + usersConns.size());
     int keyhash = Math.abs(key.hashCode());
-    List<UserConn> userConns = usersConns.get(keyhash % usersConns.size());
+    return keyhash % userConns.size();
+  }
+
+  private UserConn getTenantUserConnByKey(String key) {
+    String tenantId = tenantManager.getTenantIdForKey(key);
+    List<UserConn> userConns = tenantConns.get(tenantId);
+    // System.out.println("using tenant id: " + tenantId + " for key: " + key + "
+    // conns: " + usersConns.size());
+    int keyhash = Math.abs(key.hashCode());
     UserConn conn = userConns.get(keyhash % userConns.size());
     return conn;
 
   }
 
-  private String getUserName(String key){
+  private String getUserName(String key) {
     return getTenantUserConnByKey(key).getUser();
   }
 
@@ -234,6 +242,12 @@ public class JdbcMtDBClient extends DB {
     tenantManager = TenantManager.getInstance();
     tenantManager.init(props);
 
+    this.jdbcFetchSize = getIntProperty(props, JDBC_FETCH_SIZE);
+    this.batchSize = getIntProperty(props, DB_BATCH_SIZE);
+
+    this.autoCommit = getBoolProperty(props, JDBC_AUTO_COMMIT, true);
+    this.batchUpdates = getBoolProperty(props, JDBC_BATCH_UPDATES, false);
+
     if (loadTenants) {
       System.out.println("loading tenants");
       initConnection();
@@ -245,7 +259,17 @@ public class JdbcMtDBClient extends DB {
       if (!dotransactions) {
         initConnection();
       } else {
-        initConnection();
+        if (conns == null) {
+          initConnection();
+        }
+        String urls = props.getProperty(CONNECTION_URL, DEFAULT_PROP);
+        final String[] urlArr = urls.split(";");
+        try {
+          this.dbFlavor = DBFlavor.fromJdbcUrl(urlArr[0]);
+        } catch (ClassNotFoundException e) {
+          System.err.println("Error in initializing the JDBS driver: " + e);
+          throw new DBException(e);
+        }
         JdbcMtDBConnectionPool pool = JdbcMtDBConnectionPool.instance();
         pool.init(props, tenantManager);
         tenantConns = pool.getTenantConns();
@@ -410,11 +434,6 @@ public class JdbcMtDBClient extends DB {
       sqlserver = true;
     }
 
-    this.jdbcFetchSize = getIntProperty(props, JDBC_FETCH_SIZE);
-    this.batchSize = getIntProperty(props, DB_BATCH_SIZE);
-
-    this.autoCommit = getBoolProperty(props, JDBC_AUTO_COMMIT, true);
-    this.batchUpdates = getBoolProperty(props, JDBC_BATCH_UPDATES, false);
     conns = createConnection(urls, user, passwd, driver);
     cachedStatements = new ConcurrentHashMap<StatementType, PreparedStatement>();
     initialized = true;
@@ -501,7 +520,8 @@ public class JdbcMtDBClient extends DB {
   @Override
   public Status read(String tableName, String key, Set<String> fields, Map<String, ByteIterator> result) {
     try {
-      StatementType type = new StatementType(StatementType.Type.READ, tableName, 1, "", getShardIndexByKey(key));
+
+      StatementType type = new StatementType(StatementType.Type.READ, tableName, 1, "", getTenantUserConnIdxByKey(key));
       String user = getUserName(key);
       ConcurrentMap<StatementType, PreparedStatement> tenantCache = tenantCachedStatements.getOrDefault(user, null);
       PreparedStatement readStatement = null;
@@ -512,9 +532,9 @@ public class JdbcMtDBClient extends DB {
         readStatement = createAndCacheReadStatement(type, key);
       }
       readStatement.setString(1, key);
-      //System.out.println("executeQuery: " + key + " user: " + user);
+      // System.out.println("executeQuery: " + key + " user: " + user);
       ResultSet resultSet = readStatement.executeQuery();
-      //System.out.println("executeQuery: " + key + " done. " + user);
+      // System.out.println("executeQuery: " + key + " done. " + user);
       if (!resultSet.next()) {
         resultSet.close();
         return Status.NOT_FOUND;
@@ -528,8 +548,8 @@ public class JdbcMtDBClient extends DB {
       resultSet.close();
       return Status.OK;
     } catch (SQLException e) {
-      System.err.println("Error in processing read of table " + tableName 
-          + ": " + " key: " + key + " user: " + getUserName(key) + e);
+      System.err.println(
+          "Error in processing read of table " + tableName + ": " + " key: " + key + " user: " + getUserName(key) + e);
       return Status.ERROR;
     }
   }
