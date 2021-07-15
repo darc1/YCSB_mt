@@ -280,16 +280,23 @@ public class JdbcMtDBClient extends DB {
 
   private void createTenantsAndUsers() throws DBException {
 
+    boolean forceGrantSelect = getBoolProperty(props, "force_grant_select", false);
     for (String tenantId : tenantManager.getTenantIds()) {
       for (String username : tenantManager.getTenantUsers(tenantId)) {
         Status res = insertUser(aclsTable, username, tenantId);
-        if (res != Status.OK) {
+        if (res != Status.OK && !forceGrantSelect) {
           System.err.println("failed to insert user: " + username + " tenantId: " + tenantId + "Status: " + res);
           System.exit(1);
         }
         res = createRole(username, aclsTable, table);
-        if (res != Status.OK) {
+        if (res != Status.OK && !forceGrantSelect) {
           System.err.println("failed to create role: " + username + " tenantId: " + tenantId + "Status: " + res);
+          System.exit(1);
+        }
+        res = grantSelectToUser(username, aclsTable, table);
+        if (res != Status.OK) {
+          System.err
+              .println("failed to grant select to role: " + username + " tenantId: " + tenantId + "Status: " + res);
           System.exit(1);
         }
       }
@@ -338,13 +345,47 @@ public class JdbcMtDBClient extends DB {
     try {
       StringBuilder createRole = new StringBuilder(
           "CREATE ROLE " + username + " WITH LOGIN PASSWORD '" + DEFAULT_USERS_PASSWORD + "';");
-      createRole.append("\n");
-      createRole.append("GRANT SELECT ON " + userTable + " TO " + username + ";");
-      createRole.append("\n");
-      createRole.append("GRANT SELECT ON " + aclTable + " TO " + username + ";");
 
       // TODO shared support?
       PreparedStatement roleStatement = conns.get(0).prepareStatement(createRole.toString());
+
+      // Normal update
+      boolean result = roleStatement.execute();
+      // If we are not autoCommit, we might have to commit now
+      if (!autoCommit) {
+        // Let updates be batcher locally
+        if (batchSize > 0) {
+          if (++numRowsInBatch % batchSize == 0) {
+            // Send the batch of updates
+            conns.get(0).commit();
+          }
+          // uhh
+          return Status.OK;
+        } else {
+          // Commit each update
+          conns.get(0).commit();
+        }
+      }
+      System.out.println("result of create role: " + result);
+      if (!result) {
+        return Status.OK;
+      }
+      return Status.UNEXPECTED_STATE;
+    } catch (SQLException e) {
+      System.err.println("Error in processing role create: " + username + e);
+      return Status.ERROR;
+    }
+  }
+
+  public Status grantSelectToUser(String username, String aclTable, String userTable) {
+    try {
+      StringBuilder grantSelect = new StringBuilder();
+      grantSelect.append("GRANT SELECT ON " + userTable + " TO " + username + ";");
+      grantSelect.append("\n");
+      grantSelect.append("GRANT SELECT ON " + aclTable + " TO " + username + ";");
+
+      // TODO shared support?
+      PreparedStatement roleStatement = conns.get(0).prepareStatement(grantSelect.toString());
 
       // Normal update
       boolean result = roleStatement.execute();
