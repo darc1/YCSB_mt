@@ -20,12 +20,15 @@ public final class TenantManager {
   private Map<String, List<String>> tenantUsers;
   private String invalidTenantId;
   private ByteIterator invalidTenantIdBytes;
+  private String usernamePrefix;
 
   // Properties
   public static final String NUM_TENANTS_DEFAULT = "10";
   public static final String NUM_TENANTS_PROPERTY = "num_tenants";
   public static final String NUM_USERS_PER_TENANT_DEFAULT = "1";
   public static final String NUM_USERS_PER_TENANT_PROPERTY = "num_users_per_tenant";
+  public static final String USERNAME_PERFIX_DEFAULT = "user";
+  public static final String USERNAME_PERFIX_PROPERTY = "user_name_prefix";
   public static final String MULTI_TENANT_INIT = "multi_teant_init";
 
   public static TenantManager getInstance() {
@@ -51,6 +54,7 @@ public final class TenantManager {
 
   public void initTenants(Properties p) {
 
+    usernamePrefix = p.getProperty(USERNAME_PERFIX_PROPERTY, USERNAME_PERFIX_DEFAULT);
     numTenants = Integer.parseInt(p.getProperty(NUM_TENANTS_PROPERTY, NUM_TENANTS_DEFAULT));
     usersPerTenant = Integer.parseInt(p.getProperty(NUM_USERS_PER_TENANT_PROPERTY, NUM_USERS_PER_TENANT_DEFAULT));
     tenantUsers = new HashMap<String, List<String>>();
@@ -64,7 +68,7 @@ public final class TenantManager {
       tenantIdsBytes.add(new StringByteIterator(uuid));
       tenantUsers.put(uuid, new ArrayList<String>());
       for (int user = 0; user < usersPerTenant; user++) {
-        String username = "user" + user + "t" + i;
+        String username = usernamePrefix + user + "t" + i;
         tenantUsers.get(uuid).add(username);
       }
     }
