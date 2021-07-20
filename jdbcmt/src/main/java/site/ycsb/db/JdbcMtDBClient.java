@@ -385,7 +385,8 @@ public class JdbcMtDBClient extends DB {
       grantSelect.append("GRANT SELECT ON " + userTable + " TO " + username + ";");
       grantSelect.append("\n");
       grantSelect.append("GRANT SELECT ON " + aclTable + " TO " + username + ";");
-
+      
+      System.out.println(grantSelect.toString());
       // TODO shared support?
       PreparedStatement roleStatement = conns.get(0).prepareStatement(grantSelect.toString());
 
