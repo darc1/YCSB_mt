@@ -281,6 +281,7 @@ public class JdbcMtDBClient extends DB {
   private void createTenantsAndUsers() throws DBException {
 
     boolean forceGrantSelect = getBoolProperty(props, "force_grant_select", false);
+    System.out.println("Force Grant Select: " + forceGrantSelect);
     for (String tenantId : tenantManager.getTenantIds()) {
       for (String username : tenantManager.getTenantUsers(tenantId)) {
         Status res = insertUser(aclsTable, username, tenantId);
@@ -293,6 +294,7 @@ public class JdbcMtDBClient extends DB {
           System.err.println("failed to create role: " + username + " tenantId: " + tenantId + "Status: " + res);
           System.exit(1);
         }
+        System.out.println("Granting select to user: " + username);
         res = grantSelectToUser(username, aclsTable, table);
         if (res != Status.OK) {
           System.err
