@@ -103,6 +103,9 @@ public class JdbcMtDBClient extends DB {
    */
   public static final String ACLS_TABLENAME_PROPERTY_DEFAULT = "acls";
   public static final String DO_TRANSACTIONS_PROPERTY = "dotransactions";
+
+  public static final String GROUP_GRANT_SELECT = "GROUP_GRANT_SELECT";
+
   private String aclsTable;
 
   protected String table;
@@ -281,6 +284,7 @@ public class JdbcMtDBClient extends DB {
   private void createTenantsAndUsers() throws DBException {
 
     boolean forceGrantSelect = getBoolProperty(props, "force_grant_select", false);
+    createGrantSelectGroup(aclsTable, table);
     System.out.println("Force Grant Select: " + forceGrantSelect);
     for (String tenantId : tenantManager.getTenantIds()) {
       for (String username : tenantManager.getTenantUsers(tenantId)) {
@@ -295,13 +299,53 @@ public class JdbcMtDBClient extends DB {
           System.exit(1);
         }
         System.out.println("Granting select to user: " + username);
-        res = grantSelectToUser(username, aclsTable, table);
+        res = grantSelectToUser(username);
         if (res != Status.OK) {
           System.err
               .println("failed to grant select to role: " + username + " tenantId: " + tenantId + "Status: " + res);
           System.exit(1);
         }
       }
+    }
+  }
+
+  public Status createGrantSelectGroup(String aclTable, String userTable) {
+    try {
+      StringBuilder createRole = new StringBuilder(
+          "CREATE ROLE " + GROUP_GRANT_SELECT  +  ";");
+      createRole.append("\n");
+      createRole.append("GRANT SELECT ON " + userTable + " TO " + GROUP_GRANT_SELECT + ";");
+      createRole.append("\n");
+      createRole.append("GRANT SELECT ON " + aclTable + " TO " + GROUP_GRANT_SELECT + ";");
+
+      // TODO shared support?
+      PreparedStatement roleStatement = conns.get(0).prepareStatement(createRole.toString());
+
+      // Normal update
+      boolean result = roleStatement.execute();
+      // If we are not autoCommit, we might have to commit now
+      if (!autoCommit) {
+        // Let updates be batcher locally
+        if (batchSize > 0) {
+          if (++numRowsInBatch % batchSize == 0) {
+            // Send the batch of updates
+            conns.get(0).commit();
+          }
+          // uhh
+          return Status.OK;
+        } else {
+          // Commit each update
+          conns.get(0).commit();
+        }
+      }
+      System.out.println("result of create role: " + result);
+      if (!result) {
+        return Status.OK;
+      }
+      return Status.UNEXPECTED_STATE;
+    } catch (SQLException e) {
+      System.err.println("Error in processing role create: " + GROUP_GRANT_SELECT + e);
+      return Status.ERROR;
     }
   }
 
@@ -379,12 +423,10 @@ public class JdbcMtDBClient extends DB {
     }
   }
 
-  public Status grantSelectToUser(String username, String aclTable, String userTable) {
+  public Status grantSelectToUser(String username) {
     try {
       StringBuilder grantSelect = new StringBuilder();
-      grantSelect.append("GRANT SELECT ON " + userTable + " TO " + username + ";");
-      grantSelect.append("\n");
-      grantSelect.append("GRANT SELECT ON " + aclTable + " TO " + username + ";");
+      grantSelect.append("GRANT " + GROUP_GRANT_SELECT + " TO " + username + ";");
       
       System.out.println(grantSelect.toString());
       // TODO shared support?
