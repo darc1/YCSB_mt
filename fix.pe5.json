@@ -1,0 +1,309 @@
+[ {
+  "metric" : "OVERALL",
+  "measurement" : "RunTime(ms)",
+  "value" : 31330308
+}, {
+  "metric" : "OVERALL",
+  "measurement" : "Throughput(ops/sec)",
+  "value" : 638.3595079882393
+}, {
+  "metric" : "TOTAL_GCS_G1_Young_Generation",
+  "measurement" : "Count",
+  "value" : 174
+}, {
+  "metric" : "TOTAL_GC_TIME_G1_Young_Generation",
+  "measurement" : "Time(ms)",
+  "value" : 615
+}, {
+  "metric" : "TOTAL_GC_TIME_%_G1_Young_Generation",
+  "measurement" : "Time(%)",
+  "value" : 0.001962955487063836
+}, {
+  "metric" : "TOTAL_GCS_G1_Old_Generation",
+  "measurement" : "Count",
+  "value" : 0
+}, {
+  "metric" : "TOTAL_GC_TIME_G1_Old_Generation",
+  "measurement" : "Time(ms)",
+  "value" : 0
+}, {
+  "metric" : "TOTAL_GC_TIME_%_G1_Old_Generation",
+  "measurement" : "Time(%)",
+  "value" : 0.0
+}, {
+  "metric" : "TOTAL_GCs",
+  "measurement" : "Count",
+  "value" : 174
+}, {
+  "metric" : "TOTAL_GC_TIME",
+  "measurement" : "Time(ms)",
+  "value" : 615
+}, {
+  "metric" : "TOTAL_GC_TIME_%",
+  "measurement" : "Time(%)",
+  "value" : 0.001962955487063836
+}, {
+  "metric" : "read_unauthorized",
+  "measurement" : "read_unauthorized",
+  "value" : 0
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "0",
+  "value" : 0.019992
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "1",
+  "value" : 0.0200018
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "2",
+  "value" : 0.02000925
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "3",
+  "value" : 0.0199166
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "4",
+  "value" : 0.01999395
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "5",
+  "value" : 0.01999905
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "6",
+  "value" : 0.0199896
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "7",
+  "value" : 0.01998255
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "8",
+  "value" : 0.019983
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "9",
+  "value" : 0.01999505
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "10",
+  "value" : 0.0199803
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "11",
+  "value" : 0.0199726
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "12",
+  "value" : 0.0199573
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "13",
+  "value" : 0.02001535
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "14",
+  "value" : 0.02004205
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "15",
+  "value" : 0.02000575
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "16",
+  "value" : 0.01997775
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "17",
+  "value" : 0.0199955
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "18",
+  "value" : 0.0200513
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "19",
+  "value" : 0.0200697
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "20",
+  "value" : 0.0199678
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "21",
+  "value" : 0.019973
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "22",
+  "value" : 0.0199763
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "23",
+  "value" : 0.0200303
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "24",
+  "value" : 0.0200713
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "25",
+  "value" : 0.0200082
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "26",
+  "value" : 0.0199685
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "27",
+  "value" : 0.020011
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "28",
+  "value" : 0.0199912
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "29",
+  "value" : 0.01995555
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "30",
+  "value" : 0.02000475
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "31",
+  "value" : 0.01999725
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "32",
+  "value" : 0.0200132
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "33",
+  "value" : 0.02000445
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "34",
+  "value" : 0.0200718
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "35",
+  "value" : 0.02002275
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "36",
+  "value" : 0.01995845
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "37",
+  "value" : 0.01998255
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "38",
+  "value" : 0.0199888
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "39",
+  "value" : 0.0200405
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "40",
+  "value" : 0.0199789
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "41",
+  "value" : 0.0200287
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "42",
+  "value" : 0.02003855
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "43",
+  "value" : 0.01998325
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "44",
+  "value" : 0.02001405
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "45",
+  "value" : 0.020027
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "46",
+  "value" : 0.0200114
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "47",
+  "value" : 0.0200063
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "48",
+  "value" : 0.01995895
+}, {
+  "metric" : "tenant_key_spread",
+  "measurement" : "49",
+  "value" : 0.0199848
+}, {
+  "metric" : "CLEANUP",
+  "measurement" : "Operations",
+  "value" : 32
+}, {
+  "metric" : "CLEANUP",
+  "measurement" : "AverageLatency(us)",
+  "value" : 160.46875
+}, {
+  "metric" : "CLEANUP",
+  "measurement" : "MinLatency(us)",
+  "value" : 122
+}, {
+  "metric" : "CLEANUP",
+  "measurement" : "MaxLatency(us)",
+  "value" : 598
+}, {
+  "metric" : "CLEANUP",
+  "measurement" : "95thPercentileLatency(us)",
+  "value" : 205
+}, {
+  "metric" : "CLEANUP",
+  "measurement" : "99thPercentileLatency(us)",
+  "value" : 598
+}, {
+  "metric" : "read_miss",
+  "measurement" : "read_miss",
+  "value" : 0
+}, {
+  "metric" : "INSERT",
+  "measurement" : "Operations",
+  "value" : 20000000
+}, {
+  "metric" : "INSERT",
+  "measurement" : "AverageLatency(us)",
+  "value" : 50111.9681556
+}, {
+  "metric" : "INSERT",
+  "measurement" : "MinLatency(us)",
+  "value" : 297
+}, {
+  "metric" : "INSERT",
+  "measurement" : "MaxLatency(us)",
+  "value" : 4308991
+}, {
+  "metric" : "INSERT",
+  "measurement" : "95thPercentileLatency(us)",
+  "value" : 210047
+}, {
+  "metric" : "INSERT",
+  "measurement" : "99thPercentileLatency(us)",
+  "value" : 410367
+}, {
+  "metric" : "INSERT",
+  "measurement" : "Return=OK",
+  "value" : 20000000
+}, {
+  "metric" : "read_valid",
+  "measurement" : "read_valid",
+  "value" : 0
+} ]

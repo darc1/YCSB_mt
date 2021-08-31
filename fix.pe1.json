@@ -1,0 +1,137 @@
+{
+  "metric" : "OVERALL",
+  "measurement" : "RunTime(ms)",
+  "value" : 157685
+} {
+  "metric" : "OVERALL",
+  "measurement" : "Throughput(ops/sec)",
+  "value" : 3170.8786504740465
+} {
+  "metric" : "TOTAL_GCS_G1_Young_Generation",
+  "measurement" : "Count",
+  "value" : 6
+} {
+  "metric" : "TOTAL_GC_TIME_G1_Young_Generation",
+  "measurement" : "Time(ms)",
+  "value" : 77
+} {
+  "metric" : "TOTAL_GC_TIME_%_G1_Young_Generation",
+  "measurement" : "Time(%)",
+  "value" : 0.048831531217300314
+} {
+  "metric" : "TOTAL_GCS_G1_Old_Generation",
+  "measurement" : "Count",
+  "value" : 0
+} {
+  "metric" : "TOTAL_GC_TIME_G1_Old_Generation",
+  "measurement" : "Time(ms)",
+  "value" : 0
+} {
+  "metric" : "TOTAL_GC_TIME_%_G1_Old_Generation",
+  "measurement" : "Time(%)",
+  "value" : 0.0
+} {
+  "metric" : "TOTAL_GCs",
+  "measurement" : "Count",
+  "value" : 6
+} {
+  "metric" : "TOTAL_GC_TIME",
+  "measurement" : "Time(ms)",
+  "value" : 77
+} {
+  "metric" : "TOTAL_GC_TIME_%",
+  "measurement" : "Time(%)",
+  "value" : 0.048831531217300314
+} {
+  "metric" : "READ",
+  "measurement" : "Operations",
+  "value" : 490043
+} {
+  "metric" : "READ",
+  "measurement" : "AverageLatency(us)",
+  "value" : 312.70813173537834
+} {
+  "metric" : "READ",
+  "measurement" : "MinLatency(us)",
+  "value" : 145
+} {
+  "metric" : "READ",
+  "measurement" : "MaxLatency(us)",
+  "value" : 34687
+} {
+  "metric" : "READ",
+  "measurement" : "95thPercentileLatency(us)",
+  "value" : 362
+} {
+  "metric" : "READ",
+  "measurement" : "99thPercentileLatency(us)",
+  "value" : 390
+} {
+  "metric" : "READ",
+  "measurement" : "Return=OK",
+  "value" : 490043
+} {
+  "metric" : "READ",
+  "measurement" : "Return=NOT_FOUND",
+  "value" : 9957
+} {
+  "metric" : "read_unauthorized",
+  "measurement" : "read_unauthorized",
+  "value" : 5100
+} {
+  "metric" : "CLEANUP",
+  "measurement" : "Operations",
+  "value" : 1
+} {
+  "metric" : "CLEANUP",
+  "measurement" : "AverageLatency(us)",
+  "value" : 609.0
+} {
+  "metric" : "CLEANUP",
+  "measurement" : "MinLatency(us)",
+  "value" : 609
+} {
+  "metric" : "CLEANUP",
+  "measurement" : "MaxLatency(us)",
+  "value" : 609
+} {
+  "metric" : "CLEANUP",
+  "measurement" : "95thPercentileLatency(us)",
+  "value" : 609
+} {
+  "metric" : "CLEANUP",
+  "measurement" : "99thPercentileLatency(us)",
+  "value" : 609
+} {
+  "metric" : "read_miss",
+  "measurement" : "read_miss",
+  "value" : 4896
+} {
+  "metric" : "READ-FAILED",
+  "measurement" : "Operations",
+  "value" : 9957
+} {
+  "metric" : "READ-FAILED",
+  "measurement" : "AverageLatency(us)",
+  "value" : 306.6502962739781
+} {
+  "metric" : "READ-FAILED",
+  "measurement" : "MinLatency(us)",
+  "value" : 147
+} {
+  "metric" : "READ-FAILED",
+  "measurement" : "MaxLatency(us)",
+  "value" : 4491
+} {
+  "metric" : "READ-FAILED",
+  "measurement" : "95thPercentileLatency(us)",
+  "value" : 356
+} {
+  "metric" : "READ-FAILED",
+  "measurement" : "99thPercentileLatency(us)",
+  "value" : 380
+} {
+  "metric" : "read_valid",
+  "measurement" : "read_valid",
+  "value" : 490004
+}

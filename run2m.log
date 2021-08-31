@@ -1,0 +1,874 @@
+/usr/bin/java  -classpath /specific/disk1/home/chendar/YCSB_mt/workdir/conf:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/HdrHistogram-2.1.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/core-0.17.1-SNAPSHOT.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/htrace-core4-4.1.0-incubating.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/jackson-core-asl-1.9.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/jackson-mapper-asl-1.9.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/conf:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/checker-qual-3.5.0.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-collections-3.2.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-lang-2.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-pool-1.5.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/geronimo-jms_1.1_spec-1.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/geronimo-jta_1.1_spec-1.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/jdbcmt-binding-0.17.1-SNAPSHOT.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-jdbc-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-kernel-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-lib-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/postgresql-42.2.22.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/serp-1.13.1.jar site.ycsb.Client -t -db site.ycsb.db.JdbcMtDBClient -P configs/policy50/local2m.properties -p exportfile=output/results32t2mpolicy50/orig50m30.01.json -p miss_ratio=0.01 -p threadcount=32
+Command line: -t -db site.ycsb.db.JdbcMtDBClient -P configs/policy50/local2m.properties -p exportfile=output/results32t2mpolicy50/orig50m30.01.json -p miss_ratio=0.01 -p threadcount=32
+YCSB Client 0.17.1-SNAPSHOT
+
+Loading workload...
+Created tenant ID: f484d5b2-c1ef-3d12-a967-f5487b24b1ce
+Created tenant ID: f2ffc820-04f4-3e01-9bde-4ae8cb2899a5
+Created tenant ID: bdb4c7dc-765c-317b-9e31-d1bd0fef80ed
+Created tenant ID: 85323587-0f33-35b6-b4fb-18435e28b391
+Created tenant ID: 84a8de73-54a9-3b2f-a6ee-c155c81e3211
+Created tenant ID: 437ffa74-1242-32b7-b149-bf8b67a1ac92
+Created tenant ID: 83777a2d-2398-3364-a32c-7bb784c56bdb
+Created tenant ID: 273f6846-48b5-31c4-b76f-1f7ae15b6526
+Created tenant ID: 71607822-7697-38a4-8827-29121000efbd
+Created tenant ID: 3eb30604-d47e-36b4-8eba-8ed5e849b644
+Created tenant ID: ea993007-571e-3146-8ae2-fef240399399
+Created tenant ID: 7cc24fbb-4bc9-3200-881c-ebb936b4ac44
+Created tenant ID: a46f4e7b-e33d-3a6d-a7b7-9f38bee1cbb4
+Created tenant ID: 5e675537-49dd-3829-9fc0-327396c131c5
+Created tenant ID: a31a58de-ea18-3417-8763-a9d9644779be
+Created tenant ID: 04c4cf06-f6c9-3f96-8f7a-efb21836957b
+Created tenant ID: ef4fdda8-11aa-3dd2-8b34-21dff923607c
+Created tenant ID: 2a6525ea-c59a-3953-ac11-97272b253dbb
+Created tenant ID: 953a0b01-830b-3cb2-87b9-d34f53ddf76c
+Created tenant ID: 0b4ed99f-d0d9-36f7-aa2a-635e8bd61da4
+Created tenant ID: 8784070f-829a-36c3-95cb-0afd1c17938e
+Created tenant ID: 56e6bb40-b82f-3d58-8eb4-748678b51951
+Created tenant ID: 25342c15-d2a5-36e8-aebb-873c8a8db16e
+Created tenant ID: 6dcb654e-8897-3659-ae16-02e015057d32
+Created tenant ID: cf5a853d-4617-364f-b09a-7e76d51487b8
+Created tenant ID: 80919749-b567-38aa-b4eb-6d4efdc0b58b
+Created tenant ID: 2295b281-9636-3bfd-b34b-3d0f899574f9
+Created tenant ID: 497c0224-f09d-38f4-9222-e2a1bd0775a6
+Created tenant ID: 1283f9d8-eb55-316d-a835-f07e62f8e1c1
+Created tenant ID: cea4fffd-17b0-3ff9-8e54-8998cc1a8122
+Created tenant ID: 4729c498-1800-32ff-9112-aeaa578c7aeb
+Created tenant ID: f3da8ef3-5d56-3669-814f-773eef667547
+Created tenant ID: e394b616-e301-3567-9ec9-3303224cad60
+Created tenant ID: ec9723f2-cff6-3c9d-b3ab-cfe2ec2f0520
+Created tenant ID: aa4d5e42-4102-3c54-a6d7-ebcf9d60525b
+Created tenant ID: d7c066d0-41a1-3395-97cb-959bb24ad8cd
+Created tenant ID: be9c1b28-45f3-390b-94d9-4729b3e56822
+Created tenant ID: e85eed32-1d04-3572-a541-79a284ac1cdc
+Created tenant ID: 4065d413-e5b0-3d26-8e30-f7b04f45f06e
+Created tenant ID: 94a1a6e9-33af-3276-9fb3-ffa3386b8381
+Created tenant ID: 01dc96a1-4d70-3394-b614-cf81ebdd82fa
+Created tenant ID: a5700a30-7711-3671-90c5-3e04dcb6be2e
+Created tenant ID: 3de93d6c-709d-3c7c-a96e-50a9bb081ba6
+Created tenant ID: 9edd7ac3-5455-3727-83f0-2d53a5ffa86c
+Created tenant ID: 1c442de8-d976-383e-aeb6-085ae11a4a84
+Created tenant ID: 11b85b9f-9602-3359-8875-d0e60f616e52
+Created tenant ID: a34a744c-1a88-3f98-829f-5b88c33c8eb5
+Created tenant ID: a62ebf30-bd9f-3219-9c1d-2bbd2beafe5a
+Created tenant ID: 7ee4c0c6-dc96-3d99-b8d2-fc096968d00c
+Created tenant ID: 57273350-19b8-3f29-9fd9-74829f7ab81e
+Created invalid tenant ID: 76af6fd2-fed2-3592-a7d4-e51925a1a3a8
+adjusted max val to: 2020201 from: 1999999 miss ration is 0.010000 percent
+unauthorized records count: 20000 unauthorized precent: 0.01
+unauth space: 0.01 miss space: 0.0099valid space: 0.9801
+Starting test.
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t15 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t44 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t40 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t42 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t8 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t35 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t17 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t45 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t24 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t48 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t10 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t11 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t7 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t43 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t33 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t29 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t23 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t3 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t21 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t12 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t30 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t46 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t13 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t18 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t22 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t6 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t37 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t16 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t47 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t28 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t4 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t32 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t34 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t31 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t5 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t19 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t41 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t26 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t39 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t0 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t2 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t14 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t49 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t9 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t27 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t38 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t20 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t25 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t36 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t1 password: 123456
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+thread: 27 complete
+thread: 15 complete
+thread: 0 complete
+thread: 12 complete
+thread: 31 complete
+thread: 1 complete
+thread: 25 complete
+thread: 5 complete
+thread: 14 complete
+thread: 2 complete
+thread: 16 complete
+thread: 8 complete
+thread: 26 complete
+thread: 11 complete
+thread: 28 complete
+thread: 19 complete
+thread: 9 complete
+thread: 4 complete
+thread: 24 complete
+thread: 30 complete
+thread: 18 complete
+thread: 6 complete
+thread: 21 complete
+thread: 22 complete
+thread: 7 complete
+thread: 29 complete
+thread: 3 complete
+thread: 13 complete
+thread: 17 complete
+thread: 10 complete
+thread: 20 complete
+thread: 23 complete
+/usr/bin/java  -classpath /specific/disk1/home/chendar/YCSB_mt/workdir/conf:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/HdrHistogram-2.1.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/core-0.17.1-SNAPSHOT.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/htrace-core4-4.1.0-incubating.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/jackson-core-asl-1.9.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/jackson-mapper-asl-1.9.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/conf:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/checker-qual-3.5.0.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-collections-3.2.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-lang-2.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-pool-1.5.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/geronimo-jms_1.1_spec-1.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/geronimo-jta_1.1_spec-1.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/jdbcmt-binding-0.17.1-SNAPSHOT.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-jdbc-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-kernel-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-lib-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/postgresql-42.2.22.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/serp-1.13.1.jar site.ycsb.Client -t -db site.ycsb.db.JdbcMtDBClient -P configs/policy50/local2m.properties -p exportfile=output/results32t2mpolicy50/orig50m30.05.json -p miss_ratio=0.05 -p threadcount=32
+Command line: -t -db site.ycsb.db.JdbcMtDBClient -P configs/policy50/local2m.properties -p exportfile=output/results32t2mpolicy50/orig50m30.05.json -p miss_ratio=0.05 -p threadcount=32
+YCSB Client 0.17.1-SNAPSHOT
+
+Loading workload...
+Created tenant ID: f484d5b2-c1ef-3d12-a967-f5487b24b1ce
+Created tenant ID: f2ffc820-04f4-3e01-9bde-4ae8cb2899a5
+Created tenant ID: bdb4c7dc-765c-317b-9e31-d1bd0fef80ed
+Created tenant ID: 85323587-0f33-35b6-b4fb-18435e28b391
+Created tenant ID: 84a8de73-54a9-3b2f-a6ee-c155c81e3211
+Created tenant ID: 437ffa74-1242-32b7-b149-bf8b67a1ac92
+Created tenant ID: 83777a2d-2398-3364-a32c-7bb784c56bdb
+Created tenant ID: 273f6846-48b5-31c4-b76f-1f7ae15b6526
+Created tenant ID: 71607822-7697-38a4-8827-29121000efbd
+Created tenant ID: 3eb30604-d47e-36b4-8eba-8ed5e849b644
+Created tenant ID: ea993007-571e-3146-8ae2-fef240399399
+Created tenant ID: 7cc24fbb-4bc9-3200-881c-ebb936b4ac44
+Created tenant ID: a46f4e7b-e33d-3a6d-a7b7-9f38bee1cbb4
+Created tenant ID: 5e675537-49dd-3829-9fc0-327396c131c5
+Created tenant ID: a31a58de-ea18-3417-8763-a9d9644779be
+Created tenant ID: 04c4cf06-f6c9-3f96-8f7a-efb21836957b
+Created tenant ID: ef4fdda8-11aa-3dd2-8b34-21dff923607c
+Created tenant ID: 2a6525ea-c59a-3953-ac11-97272b253dbb
+Created tenant ID: 953a0b01-830b-3cb2-87b9-d34f53ddf76c
+Created tenant ID: 0b4ed99f-d0d9-36f7-aa2a-635e8bd61da4
+Created tenant ID: 8784070f-829a-36c3-95cb-0afd1c17938e
+Created tenant ID: 56e6bb40-b82f-3d58-8eb4-748678b51951
+Created tenant ID: 25342c15-d2a5-36e8-aebb-873c8a8db16e
+Created tenant ID: 6dcb654e-8897-3659-ae16-02e015057d32
+Created tenant ID: cf5a853d-4617-364f-b09a-7e76d51487b8
+Created tenant ID: 80919749-b567-38aa-b4eb-6d4efdc0b58b
+Created tenant ID: 2295b281-9636-3bfd-b34b-3d0f899574f9
+Created tenant ID: 497c0224-f09d-38f4-9222-e2a1bd0775a6
+Created tenant ID: 1283f9d8-eb55-316d-a835-f07e62f8e1c1
+Created tenant ID: cea4fffd-17b0-3ff9-8e54-8998cc1a8122
+Created tenant ID: 4729c498-1800-32ff-9112-aeaa578c7aeb
+Created tenant ID: f3da8ef3-5d56-3669-814f-773eef667547
+Created tenant ID: e394b616-e301-3567-9ec9-3303224cad60
+Created tenant ID: ec9723f2-cff6-3c9d-b3ab-cfe2ec2f0520
+Created tenant ID: aa4d5e42-4102-3c54-a6d7-ebcf9d60525b
+Created tenant ID: d7c066d0-41a1-3395-97cb-959bb24ad8cd
+Created tenant ID: be9c1b28-45f3-390b-94d9-4729b3e56822
+Created tenant ID: e85eed32-1d04-3572-a541-79a284ac1cdc
+Created tenant ID: 4065d413-e5b0-3d26-8e30-f7b04f45f06e
+Created tenant ID: 94a1a6e9-33af-3276-9fb3-ffa3386b8381
+Created tenant ID: 01dc96a1-4d70-3394-b614-cf81ebdd82fa
+Created tenant ID: a5700a30-7711-3671-90c5-3e04dcb6be2e
+Created tenant ID: 3de93d6c-709d-3c7c-a96e-50a9bb081ba6
+Created tenant ID: 9edd7ac3-5455-3727-83f0-2d53a5ffa86c
+Created tenant ID: 1c442de8-d976-383e-aeb6-085ae11a4a84
+Created tenant ID: 11b85b9f-9602-3359-8875-d0e60f616e52
+Created tenant ID: a34a744c-1a88-3f98-829f-5b88c33c8eb5
+Created tenant ID: a62ebf30-bd9f-3219-9c1d-2bbd2beafe5a
+Created tenant ID: 7ee4c0c6-dc96-3d99-b8d2-fc096968d00c
+Created tenant ID: 57273350-19b8-3f29-9fd9-74829f7ab81e
+Created invalid tenant ID: 76af6fd2-fed2-3592-a7d4-e51925a1a3a8
+adjusted max val to: 2105262 from: 1999999 miss ration is 0.050000 percent
+unauthorized records count: 20000 unauthorized precent: 0.01
+unauth space: 0.01 miss space: 0.0495valid space: 0.9405
+Starting test.
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t15 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t44 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t40 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t42 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t8 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t35 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t17 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t45 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t24 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t48 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t10 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t11 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t7 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t43 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t33 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t29 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t23 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t3 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t21 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t12 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t30 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t46 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t13 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t18 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t22 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t6 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t37 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t16 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t47 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t28 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t4 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t32 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t34 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t31 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t5 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t19 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t41 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t26 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t39 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t0 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t2 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t14 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t49 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t9 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t27 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t38 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t20 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t25 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t36 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t1 password: 123456
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+thread: 24 complete
+thread: 27 complete
+thread: 26 complete
+thread: 30 complete
+thread: 5 complete
+thread: 16 complete
+thread: 11 complete
+thread: 29 complete
+thread: 7 complete
+thread: 10 complete
+thread: 23 complete
+thread: 1 complete
+thread: 9 complete
+thread: 18 complete
+thread: 28 complete
+thread: 12 complete
+thread: 22 complete
+thread: 4 complete
+thread: 21 complete
+thread: 3 complete
+thread: 13 complete
+thread: 2 complete
+thread: 0 complete
+thread: 15 complete
+thread: 17 complete
+thread: 19 complete
+thread: 31 complete
+thread: 20 complete
+thread: 14 complete
+thread: 8 complete
+thread: 6 complete
+thread: 25 complete
+/usr/bin/java  -classpath /specific/disk1/home/chendar/YCSB_mt/workdir/conf:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/HdrHistogram-2.1.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/core-0.17.1-SNAPSHOT.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/htrace-core4-4.1.0-incubating.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/jackson-core-asl-1.9.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/lib/jackson-mapper-asl-1.9.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/conf:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/checker-qual-3.5.0.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-collections-3.2.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-lang-2.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/commons-pool-1.5.4.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/geronimo-jms_1.1_spec-1.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/geronimo-jta_1.1_spec-1.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/jdbcmt-binding-0.17.1-SNAPSHOT.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-jdbc-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-kernel-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/openjpa-lib-2.1.1.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/postgresql-42.2.22.jar:/specific/disk1/home/chendar/YCSB_mt/workdir/jdbcmt-binding/lib/serp-1.13.1.jar site.ycsb.Client -t -db site.ycsb.db.JdbcMtDBClient -P configs/policy50/local2m.properties -p exportfile=output/results32t2mpolicy50/orig50m30.1.json -p miss_ratio=0.1 -p threadcount=32
+Command line: -t -db site.ycsb.db.JdbcMtDBClient -P configs/policy50/local2m.properties -p exportfile=output/results32t2mpolicy50/orig50m30.1.json -p miss_ratio=0.1 -p threadcount=32
+YCSB Client 0.17.1-SNAPSHOT
+
+Loading workload...
+Created tenant ID: f484d5b2-c1ef-3d12-a967-f5487b24b1ce
+Created tenant ID: f2ffc820-04f4-3e01-9bde-4ae8cb2899a5
+Created tenant ID: bdb4c7dc-765c-317b-9e31-d1bd0fef80ed
+Created tenant ID: 85323587-0f33-35b6-b4fb-18435e28b391
+Created tenant ID: 84a8de73-54a9-3b2f-a6ee-c155c81e3211
+Created tenant ID: 437ffa74-1242-32b7-b149-bf8b67a1ac92
+Created tenant ID: 83777a2d-2398-3364-a32c-7bb784c56bdb
+Created tenant ID: 273f6846-48b5-31c4-b76f-1f7ae15b6526
+Created tenant ID: 71607822-7697-38a4-8827-29121000efbd
+Created tenant ID: 3eb30604-d47e-36b4-8eba-8ed5e849b644
+Created tenant ID: ea993007-571e-3146-8ae2-fef240399399
+Created tenant ID: 7cc24fbb-4bc9-3200-881c-ebb936b4ac44
+Created tenant ID: a46f4e7b-e33d-3a6d-a7b7-9f38bee1cbb4
+Created tenant ID: 5e675537-49dd-3829-9fc0-327396c131c5
+Created tenant ID: a31a58de-ea18-3417-8763-a9d9644779be
+Created tenant ID: 04c4cf06-f6c9-3f96-8f7a-efb21836957b
+Created tenant ID: ef4fdda8-11aa-3dd2-8b34-21dff923607c
+Created tenant ID: 2a6525ea-c59a-3953-ac11-97272b253dbb
+Created tenant ID: 953a0b01-830b-3cb2-87b9-d34f53ddf76c
+Created tenant ID: 0b4ed99f-d0d9-36f7-aa2a-635e8bd61da4
+Created tenant ID: 8784070f-829a-36c3-95cb-0afd1c17938e
+Created tenant ID: 56e6bb40-b82f-3d58-8eb4-748678b51951
+Created tenant ID: 25342c15-d2a5-36e8-aebb-873c8a8db16e
+Created tenant ID: 6dcb654e-8897-3659-ae16-02e015057d32
+Created tenant ID: cf5a853d-4617-364f-b09a-7e76d51487b8
+Created tenant ID: 80919749-b567-38aa-b4eb-6d4efdc0b58b
+Created tenant ID: 2295b281-9636-3bfd-b34b-3d0f899574f9
+Created tenant ID: 497c0224-f09d-38f4-9222-e2a1bd0775a6
+Created tenant ID: 1283f9d8-eb55-316d-a835-f07e62f8e1c1
+Created tenant ID: cea4fffd-17b0-3ff9-8e54-8998cc1a8122
+Created tenant ID: 4729c498-1800-32ff-9112-aeaa578c7aeb
+Created tenant ID: f3da8ef3-5d56-3669-814f-773eef667547
+Created tenant ID: e394b616-e301-3567-9ec9-3303224cad60
+Created tenant ID: ec9723f2-cff6-3c9d-b3ab-cfe2ec2f0520
+Created tenant ID: aa4d5e42-4102-3c54-a6d7-ebcf9d60525b
+Created tenant ID: d7c066d0-41a1-3395-97cb-959bb24ad8cd
+Created tenant ID: be9c1b28-45f3-390b-94d9-4729b3e56822
+Created tenant ID: e85eed32-1d04-3572-a541-79a284ac1cdc
+Created tenant ID: 4065d413-e5b0-3d26-8e30-f7b04f45f06e
+Created tenant ID: 94a1a6e9-33af-3276-9fb3-ffa3386b8381
+Created tenant ID: 01dc96a1-4d70-3394-b614-cf81ebdd82fa
+Created tenant ID: a5700a30-7711-3671-90c5-3e04dcb6be2e
+Created tenant ID: 3de93d6c-709d-3c7c-a96e-50a9bb081ba6
+Created tenant ID: 9edd7ac3-5455-3727-83f0-2d53a5ffa86c
+Created tenant ID: 1c442de8-d976-383e-aeb6-085ae11a4a84
+Created tenant ID: 11b85b9f-9602-3359-8875-d0e60f616e52
+Created tenant ID: a34a744c-1a88-3f98-829f-5b88c33c8eb5
+Created tenant ID: a62ebf30-bd9f-3219-9c1d-2bbd2beafe5a
+Created tenant ID: 7ee4c0c6-dc96-3d99-b8d2-fc096968d00c
+Created tenant ID: 57273350-19b8-3f29-9fd9-74829f7ab81e
+Created invalid tenant ID: 76af6fd2-fed2-3592-a7d4-e51925a1a3a8
+adjusted max val to: 2222221 from: 1999999 miss ration is 0.100000 percent
+unauthorized records count: 20000 unauthorized precent: 0.01
+unauth space: 0.01 miss space: 0.099valid space: 0.891
+Starting test.
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Running Multi Tenant DB
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsbuser: postgres password: docker
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Using shards: 1, batchSize:-1, fetchSize: -1
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t15 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t44 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t40 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t42 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t8 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t35 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t17 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t45 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t24 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t48 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t10 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t11 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t7 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t43 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t33 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t29 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t23 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t3 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t21 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t12 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t30 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t46 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t13 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t18 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t22 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t6 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t37 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t16 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t47 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t28 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t4 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t32 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t34 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t31 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t5 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t19 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t41 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t26 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t39 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t0 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t2 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t14 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t49 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t9 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t27 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t38 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t20 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t25 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t36 password: 123456
+Adding shard node URL: jdbc:postgresql://localhost:5432/ycsb user: user0t1 password: 123456
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []log min read: false
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: falseDBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
+DBWrapper: report latency for each error is false and specific error codes to track for latency are: []
+log min read: false
