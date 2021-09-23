@@ -35,6 +35,7 @@ public class Measurements {
     HISTOGRAM, HDRHISTOGRAM, HDRHISTOGRAM_AND_HISTOGRAM, HDRHISTOGRAM_AND_RAW, TIMESERIES, RAW
   }
 
+  private OneMeasurementAggergate aggregate = null;
   public static final String MEASUREMENT_TYPE_PROPERTY = "measurementtype";
   private static final String MEASUREMENT_TYPE_PROPERTY_DEFAULT = "hdrhistogram";
 
@@ -48,6 +49,7 @@ public class Measurements {
   public static final String MEASURE_READ_UNAUTH = "read_unauthorized";
   public static final String MEASURE_READ_VALID = "read_valid";
   public static final String MEASURE_KEY_TENANT_SPREAD = "tenant_key_spread";
+  public static final String MEASURE_AGGREGATE = "aggregate";
 
   private static Measurements singleton = null;
   private static Properties measurementproperties = null;
@@ -124,6 +126,7 @@ public class Measurements {
     opToMesurementMap.put(MEASURE_READ_UNAUTH, new OneMeasurementCounter(MEASURE_READ_UNAUTH));
     opToMesurementMap.put(MEASURE_READ_VALID, new OneMeasurementCounter(MEASURE_READ_VALID));
     opToMesurementMap.put(MEASURE_KEY_TENANT_SPREAD, new OneMeasurementSpread(MEASURE_KEY_TENANT_SPREAD));
+    aggregate = new OneMeasurementAggergate(MEASURE_AGGREGATE, props);
 
   }
 
@@ -186,6 +189,10 @@ public class Measurements {
    */
   public void measure(String operation, int latency) {
     if (measurementInterval == 1) {
+      return;
+    }
+    if(operation.equals(MEASURE_AGGREGATE)){
+      aggregate.measure(latency);
       return;
     }
     try {
@@ -266,6 +273,8 @@ public class Measurements {
     for (OneMeasurement measurement : opToIntendedMesurementMap.values()) {
       measurement.exportMeasurements(exporter);
     }
+
+    aggregate.exportMeasurements(null);
   }
 
   /**

@@ -196,6 +196,7 @@ public class MTWorkload extends CoreWorkload {
     HashMap<String, ByteIterator> cells = new HashMap<String, ByteIterator>();
     Status status = db.read(table, keyname, fields, cells);
     measurements.measure(measureName, status.getElapsed());
+    measurements.measure(Measurements.MEASURE_AGGREGATE, status.getElapsed());
     if (dataintegrity) {
       verifyRow(keyname, cells);
     }
