@@ -21,8 +21,10 @@ import site.ycsb.Status;
 import site.ycsb.measurements.exporter.MeasurementsExporter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 /**
  * Collects latency measurements, and reports them when requested.
@@ -49,8 +51,10 @@ public class Measurements {
   public static final String MEASURE_READ_UNAUTH = "read_unauthorized";
   public static final String MEASURE_READ_VALID = "read_valid";
   public static final String MEASURE_KEY_TENANT_SPREAD = "tenant_key_spread";
-  public static final String MEASURE_AGGREGATE = "aggregate";
-
+  public static final String MEASURE_AGGREGATE_VALID = "aggregate_valid";
+  public static final String MEASURE_AGGREGATE_MISS = "aggregate_miss";
+  public static final String MEASURE_AGGREGATE_UNAUTH = "aggregate_unauthorized";
+  private List<String> aggragtesNames; 
   private static Measurements singleton = null;
   private static Properties measurementproperties = null;
 
@@ -126,7 +130,8 @@ public class Measurements {
     opToMesurementMap.put(MEASURE_READ_UNAUTH, new OneMeasurementCounter(MEASURE_READ_UNAUTH));
     opToMesurementMap.put(MEASURE_READ_VALID, new OneMeasurementCounter(MEASURE_READ_VALID));
     opToMesurementMap.put(MEASURE_KEY_TENANT_SPREAD, new OneMeasurementSpread(MEASURE_KEY_TENANT_SPREAD));
-    aggregate = new OneMeasurementAggergate(MEASURE_AGGREGATE, props);
+    aggregate = new OneMeasurementAggergate("Aggregates", props);
+    aggragtesNames = Arrays.asList(MEASURE_AGGREGATE_MISS, MEASURE_AGGREGATE_VALID, MEASURE_AGGREGATE_UNAUTH); 
 
   }
 
@@ -191,8 +196,8 @@ public class Measurements {
     if (measurementInterval == 1) {
       return;
     }
-    if(operation.equals(MEASURE_AGGREGATE)){
-      aggregate.measure(latency);
+    if(operation.equals(aggragtesNames)){
+      aggregate.measure(operation, latency);
       return;
     }
     try {

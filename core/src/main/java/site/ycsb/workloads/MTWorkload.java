@@ -160,19 +160,23 @@ public class MTWorkload extends CoreWorkload {
 
     long keynum = nextKeynum();
     String measureName = null;
+    String aggregateName = null;
     // System.out.println("running transaction with keynum: " + keynum + " max val:
     // " + maxVal);
     if (keynum > maxVal) {
       // System.out.println("Got a miss query");
       measurements.measure(Measurements.MEASURE_READ_MISS, 1);
       measureName = "X-" + Measurements.MEASURE_READ_MISS;
+      aggregateName = Measurements.MEASURE_AGGREGATE_MISS;
       // System.out.println("miss key val: " + getDbKey(keynum));
     } else if (keynum <= maxVal && keynum > maxVal - unauthCount) {
       measurements.measure(Measurements.MEASURE_READ_UNAUTH, 1);
       measureName = "X-" + Measurements.MEASURE_READ_UNAUTH;
+      aggregateName = Measurements.MEASURE_AGGREGATE_UNAUTH;
     } else {
       measurements.measure(Measurements.MEASURE_READ_VALID, 1);
       measureName = "X-" + Measurements.MEASURE_READ_VALID;
+      aggregateName = Measurements.MEASURE_AGGREGATE_VALID;
     }
 
     String keyname = getDbKey(keynum);
@@ -196,7 +200,7 @@ public class MTWorkload extends CoreWorkload {
     HashMap<String, ByteIterator> cells = new HashMap<String, ByteIterator>();
     Status status = db.read(table, keyname, fields, cells);
     measurements.measure(measureName, status.getElapsed());
-    measurements.measure(Measurements.MEASURE_AGGREGATE, status.getElapsed());
+    measurements.measure(aggregateName, status.getElapsed());
     if (dataintegrity) {
       verifyRow(keyname, cells);
     }

@@ -6,8 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.concurrent.*;
-
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
@@ -17,14 +17,14 @@ import site.ycsb.measurements.exporter.*;
 /**
  * Measurement Counter.
  */
-public class OneMeasurementAggergate extends OneMeasurement {
+public class OneMeasurementAggergate extends MultiMeasurement {
 
-  private final ConcurrentLinkedQueue<Integer> measurements;
+  private final ConcurrentHashMap<String, ConcurrentLinkedQueue<Integer>> measurements;
   private final Properties props;
 
   public OneMeasurementAggergate(String name, Properties props) {
     super(name);
-    measurements = new ConcurrentLinkedQueue<>();
+    measurements = new ConcurrentHashMap<>();
     this.props = props;
   }
 
@@ -42,11 +42,18 @@ public class OneMeasurementAggergate extends OneMeasurement {
 
     JsonGenerator g = factory.createJsonGenerator(bw);
     g.setPrettyPrinter(new DefaultPrettyPrinter());
-    g.writeStartArray();
-    for(int v: measurements){
-      g.writeNumber(v);
+
+    g.writeStartObject();
+    for (Entry<String, ConcurrentLinkedQueue<Integer>> entry : measurements.entrySet()) {
+      g.writeArrayFieldStart(entry.getKey());
+      g.writeStartArray();
+      for (int v : entry.getValue()) {
+        g.writeNumber(v);
+      }
+      g.writeEndArray();
+
     }
-    g.writeEndArray();
+
     g.close();
   }
 
@@ -59,6 +66,16 @@ public class OneMeasurementAggergate extends OneMeasurement {
 
   @Override
   public void measure(int count) {
-    measurements.add(count);
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void measure(String label, int latency) {
+    if (!measurements.containsKey(label)) {
+      measurements.putIfAbsent(label, new ConcurrentLinkedQueue<>());
+    }
+
+    measurements.get(label).add(latency);
+
   }
 }
