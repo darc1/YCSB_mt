@@ -54,6 +54,8 @@ public class OneMeasurementAggergate extends MultiMeasurement {
 
     }
 
+    g.writeEndObject();
+
     g.close();
   }
 
