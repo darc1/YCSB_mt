@@ -36,6 +36,8 @@ public class OneMeasurementAggergate extends MultiMeasurement {
       return;
     }
 
+    System.out.println("Writing aggregate_file, total keys: " + measurements.size());
+
     FileOutputStream out = new FileOutputStream(exportFile);
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
     JsonFactory factory = new JsonFactory();

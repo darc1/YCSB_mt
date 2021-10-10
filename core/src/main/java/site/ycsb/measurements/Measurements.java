@@ -196,7 +196,7 @@ public class Measurements {
     if (measurementInterval == 1) {
       return;
     }
-    if(operation.equals(aggragtesNames)){
+    if(aggragtesNames.contains(operation)){
       aggregate.measure(operation, latency);
       return;
     }
