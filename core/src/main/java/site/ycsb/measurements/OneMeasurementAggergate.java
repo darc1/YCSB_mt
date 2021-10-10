@@ -48,7 +48,6 @@ public class OneMeasurementAggergate extends MultiMeasurement {
     g.writeStartObject();
     for (Entry<String, ConcurrentLinkedQueue<Integer>> entry : measurements.entrySet()) {
       g.writeArrayFieldStart(entry.getKey());
-      g.writeStartArray();
       for (int v : entry.getValue()) {
         g.writeNumber(v);
       }
