@@ -32,32 +32,54 @@ public class OneMeasurementAggergate extends MultiMeasurement {
   public void exportMeasurements(MeasurementsExporter exporter) throws IOException {
 
     String exportFile = props.getProperty("aggregate_file");
+    String exportType = props.getProperty("aggregate_export_type", "csv");
     if (exportFile == null) {
       return;
     }
 
     System.out.println("Writing aggregate_file, total keys: " + measurements.size());
+    if (exportType.equals("csv")) {
 
-    FileOutputStream out = new FileOutputStream(exportFile);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
-    JsonFactory factory = new JsonFactory();
-
-    JsonGenerator g = factory.createJsonGenerator(bw);
-    g.setPrettyPrinter(new DefaultPrettyPrinter());
-
-    g.writeStartObject();
-    for (Entry<String, ConcurrentLinkedQueue<Integer>> entry : measurements.entrySet()) {
-      g.writeArrayFieldStart(entry.getKey());
-      for (int v : entry.getValue()) {
-        g.writeNumber(v);
+      FileOutputStream out = new FileOutputStream(exportFile);
+      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+      bw.write("QueryType,Microseconds");
+      bw.newLine();
+      for (Entry<String, ConcurrentLinkedQueue<Integer>> entry : measurements.entrySet()) {
+        for (int v : entry.getValue()) {
+          bw.write(entry.getKey().replace("aggregate_", "") + "," + v);
+          bw.newLine();
+        }
       }
-      g.writeEndArray();
+
+      bw.close();
+
+      return;
 
     }
 
-    g.writeEndObject();
+    if (exportType.equals("json")) {
 
-    g.close();
+      FileOutputStream out = new FileOutputStream(exportFile);
+      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+      JsonFactory factory = new JsonFactory();
+
+      JsonGenerator g = factory.createJsonGenerator(bw);
+      g.setPrettyPrinter(new DefaultPrettyPrinter());
+
+      g.writeStartObject();
+      for (Entry<String, ConcurrentLinkedQueue<Integer>> entry : measurements.entrySet()) {
+        g.writeArrayFieldStart(entry.getKey());
+        for (int v : entry.getValue()) {
+          g.writeNumber(v);
+        }
+        g.writeEndArray();
+
+      }
+
+      g.writeEndObject();
+
+      g.close();
+    }
   }
 
   @Override

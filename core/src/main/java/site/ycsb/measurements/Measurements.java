@@ -51,9 +51,9 @@ public class Measurements {
   public static final String MEASURE_READ_UNAUTH = "read_unauthorized";
   public static final String MEASURE_READ_VALID = "read_valid";
   public static final String MEASURE_KEY_TENANT_SPREAD = "tenant_key_spread";
-  public static final String MEASURE_AGGREGATE_VALID = "aggregate_valid";
-  public static final String MEASURE_AGGREGATE_MISS = "aggregate_miss";
-  public static final String MEASURE_AGGREGATE_UNAUTH = "aggregate_unauthorized";
+  public static final String MEASURE_AGGREGATE_VALID = "aggregate_Authorized";
+  public static final String MEASURE_AGGREGATE_MISS = "aggregate_Not Exists";
+  public static final String MEASURE_AGGREGATE_UNAUTH = "aggregate_Unauthorized";
   private List<String> aggragtesNames; 
   private static Measurements singleton = null;
   private static Properties measurementproperties = null;
